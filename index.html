@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tulula · Mi cuenta</title>
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#173B61" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="https://tulula.com.pe/cdn/shop/files/Diseno_sin_titulo_20.png?width=64">
+<link rel="apple-touch-icon" href="https://tulula.com.pe/cdn/shop/files/Diseno_sin_titulo_20.png?width=180">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tulula">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--az:#173B61;--na:#C15B07;--ve:#2E7D4F;--cr:#EDEAE3;--gr:#D3DBE5;--tx:#1d2733;--pl:#6b7785}
+*{box-sizing:border-box}body{margin:0;font-family:Manrope,system-ui,sans-serif;background:var(--cr);color:var(--tx);font-size:15px}
+header{background:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gr);position:sticky;top:0}
+header img{height:28px}header button{background:none;border:0;color:var(--pl);font:inherit;font-size:13px;cursor:pointer}
+main{max-width:520px;margin:0 auto;padding:16px}
+.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 1px 2px rgba(23,59,97,.06)}
+h1{font-size:20px;font-weight:600;color:var(--az);margin:4px 0 12px}h2{font-size:16px;font-weight:600;margin:0 0 4px;color:var(--az)}
+.nota{color:var(--pl);font-size:13px;margin:4px 0}
+input{width:100%;padding:12px 14px;border:1px solid var(--gr);border-radius:12px;font:inherit;font-size:16px;margin:8px 0}
+.btn{width:100%;padding:13px;border:0;border-radius:12px;background:var(--az);color:#fff;font:inherit;font-weight:600;font-size:15px;cursor:pointer}
+.btn.sec{background:#fff;color:var(--az);border:1px solid var(--az)}.btn:disabled{opacity:.5}
+.pasos{list-style:none;padding:0;margin:14px 0 4px}
+.paso{display:flex;gap:12px;position:relative;padding-bottom:16px}
+.paso:not(:last-child):before{content:"";position:absolute;left:11px;top:24px;bottom:0;width:2px;background:var(--gr)}
+.paso.ok:not(:last-child):before{background:var(--ve)}
+.pto{width:24px;height:24px;border-radius:50%;border:2px solid var(--gr);background:#fff;flex:none;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px}
+.paso.ok .pto{background:var(--ve);border-color:var(--ve)}
+.paso b{font-weight:600;display:block}.paso span{color:var(--pl);font-size:13px}
+.ag{background:var(--cr);border-radius:12px;padding:12px;margin-top:8px;font-size:14px}.ag a{color:var(--na);font-weight:600}
+.sw{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid var(--gr);font-size:14px}.sw input{width:22px;height:22px;flex:0 0 22px;margin:0 0 0 12px;padding:0;accent-color:var(--ve)}
+.vt{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}.vt a{text-decoration:none;color:var(--tx)}.vt img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;background:var(--gr)}.vt b{display:block;font-size:13px;font-weight:600;margin-top:6px;color:var(--az)}.vt span{font-size:12px;color:var(--pl)}
+.btn.wa{background:var(--na);margin-top:10px}
+.chip{display:inline-block;font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--gr);color:var(--az)}
+.fila{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin-top:10px;padding-bottom:4px}.fila a{flex:0 0 44%;scroll-snap-align:start;text-decoration:none;color:var(--tx)}.fila img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;background:var(--gr)}.fila b{display:block;font-size:13px;font-weight:600;margin-top:6px;color:var(--az)}.fila span{font-size:12px;color:var(--pl)}
+.velo{position:fixed;inset:0;background:rgba(23,59,97,.45);display:flex;align-items:flex-end;justify-content:center;z-index:20}.velo .card{width:100%;max-width:520px;margin:0;border-radius:16px 16px 0 0;padding:20px 16px 28px}.lnk{background:none;border:0;color:var(--na);font:inherit;font-weight:600;font-size:13px;padding:0;cursor:pointer}select{width:100%;padding:12px;border:1px solid var(--gr);border-radius:12px;font:inherit;font-size:16px;background:#fff}
+.prendas{list-style:none;padding:0;margin:10px 0 0}.prendas li{font-size:14px;font-weight:600;color:var(--az);padding:3px 0}
+.chip.vip{background:var(--az);color:#fff}
+.bt{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}.bt th,.bt td{padding:7px 4px;text-align:center;border-bottom:1px solid var(--gr)}.bt td:first-child,.bt th:first-child{text-align:left}.bt th{font-size:11px;font-weight:600;color:var(--pl);text-transform:uppercase}.bt .yo{background:rgba(193,91,7,.10);font-weight:600}
+/* 26-nov (Pablo) · modo oscuro según el celular: fondo azul Tulula y letras crema (no negro) */
+@media (prefers-color-scheme: dark){
+  :root{--cr:#173B61;--tx:#EDEAE3;--pl:#B7C3D1;--gr:rgba(237,234,227,.16)}
+  body{background:#173B61}
+  header{background:#173B61;border-bottom-color:rgba(237,234,227,.14)} header img{filter:brightness(0) invert(.93)}
+  .card{background:#1E4870;box-shadow:none}
+  h1,h2,.prendas li{color:#EDEAE3} .chip{background:rgba(237,234,227,.14);color:#EDEAE3} .chip.vip{background:#EDEAE3;color:#173B61}
+  .btn{background:#EDEAE3;color:#173B61} .btn.sec{background:transparent;color:#EDEAE3;border-color:#EDEAE3} .btn.wa{background:var(--na);color:#fff}
+  input,select{background:#173B61;color:#EDEAE3;border-color:rgba(237,234,227,.25)}
+  .pto{background:#1E4870} .ag{background:rgba(237,234,227,.07)} .ag a,.lnk{color:#F4A964}
+  .vt a,.fila a{color:#EDEAE3} .velo{background:rgba(0,0,0,.55)} .bt .yo{background:rgba(244,169,100,.16)}
+}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin:0 0 12px;padding-bottom:2px}.tabs button{flex:none;padding:8px 12px;border-radius:20px;border:1px solid var(--gr);background:transparent;color:var(--tx);font:inherit;font-size:13px;cursor:pointer}.tabs button.on{background:var(--az);color:#fff;border-color:var(--az)}
+.hrow{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--gr);cursor:pointer;font-size:14px}.hrow span{color:var(--pl);font-size:13px}.hdet{display:none;padding:0 0 10px}.hdet.ver{display:block}
+@media (prefers-color-scheme: dark){.tabs button.on{background:#EDEAE3;color:#173B61;border-color:#EDEAE3}}
+#inst{display:none}.err{color:#b42318;font-size:13px;min-height:18px}
+</style>
+</head>
+<body>
+<header><img src="https://tulula.com.pe/cdn/shop/files/logo-oscuro_649cf6f9-9636-42ac-9f18-05f5af1ff2de.png?width=400" alt="Tulula"><button id="salir" style="display:none" onclick="salir()">Salir</button></header>
+<main id="app"><div class="card"><p class="nota">Cargando…</p></div></main>
+<script>
+/* Mi Cuenta Tulula · 24-nov-2026. Lee la base solo por funciones que devuelven el pedido de la clienta (enlace privado o sesión con código al correo). */
+const SB = 'https://vlilvrxfppppzwyaeviu.supabase.co', AN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZsaWx2cnhmcHBwcHp3eWFldml1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2NDIwMTMsImV4cCI6MjEwMDIxODAxM30.Bmo4CNDDbSF7Vp9JpDm7ceKUlsKKdufKcKFDIGHS4Hs';
+const $ = s => document.querySelector(s), app = $('#app');
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const LS = { g(k){ try { return localStorage.getItem(k); } catch(_) { return null; } }, s(k, v){ try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch(_){} } };
+async function rpc(fn, args){
+  const r = await fetch(SB + '/rest/v1/rpc/' + fn, { method: 'POST', headers: { apikey: AN, Authorization: 'Bearer ' + AN, 'Content-Type': 'application/json', 'Content-Profile': 'erp', 'Accept-Profile': 'erp' }, body: JSON.stringify(args) });
+  if (!r.ok) throw new Error('HTTP ' + r.status); return r.json();
+}
+const fh = t => { if (!t) return ''; const d = new Date(t); return d.toLocaleString('es-PE', { timeZone: 'America/Lima', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true }).replace('.', ''); };
+const CUR = { SHALOM: 'Shalom', OLVA: 'Olva', SALVA: 'nuestro motorizado', INDRIVER: 'el motorizado', RECOJO: 'recojo en almacén' };
+function pasos(p){
+  const e = p.eventos || {}, est = String(p.estado || '').toUpperCase(), salio = ['EN CAMINO','ENTREGADO'].includes(est), fin = est === 'ENTREGADO';
+  const c = CUR[p.courier] || 'el courier', ag = p.agencia;
+  const reg = e.REGISTRADO || e.REGISTRADO_ERP || e.SEPARAR || e.ENVIAR;
+  // 25-nov 22:47 (Pablo) · los 5 pasos de Shalom y Olva y de dónde sale cada uno:
+  // 1 ERP: «Pedido registrado» si tiene el pago completo y está en ENVIAR; si no, «Pedido separado».
+  // 2 Courier: Shalom «Origen» / Olva «Recepcionado por tienda». 3 Shalom «En tránsito» / Olva «En camino a»:
+  //   Lima, Callao y Lima provincias = «En camino»; el resto = «En camino a {Región}». 4 Shalom «En destino» / Olva «Ya puedes recoger
+  //   tu envío en tienda». 5 Shalom «Entregado a …» / Olva «Entregado exitosamente» (o ENTREGADO del ERP).
+  const agc = p.courier === 'SHALOM' || p.courier === 'OLVA', dz = ag && ag.zona ? ' · ' + ag.zona : '';
+  const lima = /^(lima|callao)/i.test(String(p.destino || '').trim()), destTxt = !p.destino || lima ? 'En camino' : 'En camino a ' + p.destino;
+  const regOk = p.pagado && (est !== 'SEPARAR'), paso1 = (regOk || salio) ? 'Pedido registrado' : 'Pedido separado';
+  const L = agc ? [
+    { t: paso1, ts: e.ENVIAR || reg },
+    { t: 'Entregado a ' + c, ts: e.SH_ORIGEN || e.SH_CREADO || e.OL_ORIGEN || e['EN CAMINO'], ok: salio },
+    { t: destTxt, ts: e.SH_TRANSITO || e.SH_REPARTO || e.OL_TRANSITO },
+    { t: 'Llegó a tu agencia ' + c + dz, ts: e.SH_DESTINO || e.OL_DESTINO },
+    { t: 'Entregado', ts: e.SH_ENTREGADO || e.OL_ENTREGADO || e.ENTREGADO, ok: fin }
+  ] : [
+    { t: paso1, ts: e.ENVIAR || reg },
+    { t: p.courier === 'RECOJO' ? 'Listo para recoger' : 'En camino con ' + c, ts: e['EN CAMINO'], ok: salio },
+    { t: 'Entregado', ts: e.ENTREGADO, ok: fin }
+  ];
+  let ult = 0; L.forEach((x, i) => { if (x.ts || x.ok) ult = i; });
+  L.forEach((x, i) => { x.ok = i <= ult; });
+  const act = L.findIndex(x => !x.ok);
+  return '<ul class="pasos">' + L.map((x, i) => '<li class="paso' + (x.ok ? ' ok' : '') + '"><div class="pto">' + (x.ok ? '✓' : '') + '</div><div><b>' + esc(x.t) + '</b><span>' + (x.ts ? fh(x.ts) : (i === act ? 'Siguiente' : '')) + '</span></div></li>').join('') + '</ul>';
+}
+function tarjeta(p){
+  if (!p) return '';
+  const ag = p.agencia, g = p.guia;
+  let h = '<div class="card"><span class="chip">Pedido #' + esc(p.nro) + '</span>' + (p.prendas ? '<ul class="prendas">' + String(p.prendas).split(/\s*·\s*/).filter(Boolean).map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>' : '<h2 style="margin-top:10px">Tu pedido</h2>') + pasos(p);
+  // 26-nov (Pablo) · Shalom: la guía es «orden-código» (con eso se rastrea). La CLAVE DE RECOJO es otra y solo se ve con el pago completo.
+  if (g && g.guia) h += '<p class="nota">Guía ' + esc(CUR[g.courier] || g.courier) + ': <b>' + esc(g.guia + (g.codigo ? '-' + g.codigo : '')) + '</b></p>'
+    + (g.clave ? '<p class="nota">Clave de recojo: <b>' + esc(g.clave) + '</b> · llévala con tu DNI</p>'
+       : g.clave_oculta ? '<p class="nota">🔒 Tu clave de recojo aparecerá aquí cuando completes tu pago' + (Number(g.debe) > 0.5 ? ' (te falta S/ ' + Number(g.debe).toFixed(2) + ')' : '') + '.</p>'
+       : g.sin_clave ? '<p class="nota">Recoges con tu DNI.</p>' : '');
+  if (ag) h += '<div class="ag"><b>Agencia ' + esc(CUR[ag.courier] || ag.courier) + ' · ' + esc(ag.zona || '') + '</b><br>' + esc(ag.direccion || '') + (ag.horario ? '<br><span class="nota">' + esc(ag.horario) + (ag.domingo ? ' · Domingo ' + esc(ag.domingo) : '') + '</span>' : '') + (ag.lat && ag.lng ? '<br><a target="_blank" rel="noopener" href="https://www.google.com/maps?q=' + ag.lat + ',' + ag.lng + '">Ver en el mapa</a>' : '') + '</div>';
+  return h + '</div>';
+}
+// 25-nov (Pablo) · instalar con los menos pasos posibles. Android/Chrome: 1 botón. iPhone: Apple no permite botón directo,
+// se muestra la guía de 2 toques con flecha al botón Compartir. Dentro de Instagram/WhatsApp/Facebook: primero abrir en Safari/Chrome.
+const instalar = '<div class="card" id="inst" style="display:none"><h2>Agrega Tulula app a tu celular</h2><p class="nota">Tus pedidos, tus puntos y lo nuevo, a un toque.</p><button class="btn" onclick="inst()">Agregar a mi celular</button></div>'
+  + '<div class="card" id="ios" style="display:none"><h2>Agrega Tulula app a tu iPhone</h2><p class="nota">Son 2 toques:</p><ol style="margin:8px 0 0 18px;padding:0;line-height:1.9"><li>Toca <b>Compartir</b> <svg width="16" height="18" viewBox="0 0 16 20" style="vertical-align:-3px" fill="none" stroke="#1A73E8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1v12M4 5l4-4 4 4"/><path d="M5 8H2.5A1.5 1.5 0 0 0 1 9.5v8A1.5 1.5 0 0 0 2.5 19h11a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 13.5 8H11"/></svg> abajo en Safari</li><li>Elige <b>Agregar a inicio</b> <span style="display:inline-block;border:1px solid var(--gr);border-radius:6px;padding:0 6px">＋</span></li></ol></div>'
+  + '<div class="card" id="dentro" style="display:none"><h2>Abre esta página en tu navegador</h2><p class="nota">Desde Instagram o WhatsApp no se puede agregar. Copia el enlace y ábrelo en <b id="nav">Safari</b>.</p><button class="btn" onclick="copiarEnlace(this)">Copiar enlace</button></div>'
+  + '<div id="flecha" style="display:none;position:fixed;bottom:8px;left:50%;transform:translateX(-50%);background:var(--az);color:#fff;padding:10px 14px;border-radius:12px;font-size:14px;z-index:9;box-shadow:0 6px 20px rgba(0,0,0,.25)">Toca <b>Compartir</b> <svg width="16" height="18" viewBox="0 0 16 20" style="vertical-align:-3px" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1v12M4 5l4-4 4 4"/><path d="M5 8H2.5A1.5 1.5 0 0 0 1 9.5v8A1.5 1.5 0 0 0 2.5 19h11a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 13.5 8H11"/></svg> aquí abajo y luego <b>Agregar a inicio</b> <span onclick="this.parentElement.remove()" style="margin-left:8px;cursor:pointer">✕</span></div>';
+// 26-nov (Pablo) · en computadora: «Tulula app es para tu celular» + código QR (se arma aquí mismo, el enlace no sale a otro sitio)
+function pcAviso(){
+  const c = document.createElement('div'); c.className = 'card'; c.innerHTML = '<h2>Tulula app es para tu celular</h2><p class="nota">Escanea este código con la cámara de tu celular y agrégala desde ahí.</p><div id="qr" style="display:flex;justify-content:center;margin-top:10px"></div>';
+  const i = $('#inst'); if (i && i.parentNode) i.parentNode.insertBefore(c, i); else app.appendChild(c);
+  const s = document.createElement('script'); s.src = 'https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js';
+  s.onload = () => { try { const q = qrcode(0, 'M'); q.addData(location.href); q.make(); $('#qr').innerHTML = q.createSvgTag({ cellSize: 4, margin: 2, scalable: false }); const v = $('#qr svg'); if (v) { v.style.background = '#fff'; v.style.borderRadius = '10px'; } } catch(_) { c.remove(); } };
+  s.onerror = () => c.remove(); document.head.appendChild(s);
+}
+async function copiarEnlace(b){ try { await navigator.clipboard.writeText(location.href); b.textContent = 'Enlace copiado ✓'; } catch(_) { prompt('Copia este enlace:', location.href); } }
+let evInst = null;
+const esPC = () => !/android|iphone|ipad|mobile/i.test(navigator.userAgent);
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); if (esPC()) return; evInst = e; const c = $('#inst'); if (c) c.style.display = 'block'; });   // 26-nov · en computadora no se ofrece instalar
+async function inst(){ if (!evInst) return; evInst.prompt(); await evInst.userChoice; evInst = null; const c = $('#inst'); if (c) c.style.display = 'none'; }
+function iosAviso(){
+  const ua = navigator.userAgent, ios = /iphone|ipad/i.test(ua), solo = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  if (solo) return;
+  if (esPC()) { pcAviso(); return; }
+  if (/Instagram|FBAN|FBAV|WhatsApp|Line\/|TikTok/i.test(ua)) { const d = $('#dentro'); if (d) { d.style.display = 'block'; $('#nav').textContent = ios ? 'Safari' : 'Chrome'; } return; }
+  if (/android/i.test(ua)) setTimeout(() => { if (!evInst) { const c = $('#inst'); if (c) { c.style.display = 'block'; c.querySelector('button').outerHTML = '<p class="nota">Toca el menú <b>⋮</b> de Chrome y elige <b>Instalar app</b> o <b>Agregar a la pantalla principal</b>.</p>'; } } }, 4000);
+  if (ios) { const c = $('#ios'); if (c) c.style.display = 'block'; if (!LS.g('mc_flecha')) { const f = $('#flecha'); if (f) { f.style.display = 'block'; LS.s('mc_flecha', '1'); setTimeout(() => f.remove(), 12000); } } }
+}
+function entrar(msg){
+  $('#salir').style.display = 'none';
+  app.innerHTML = '<h1>Mi cuenta</h1><div class="card"><h2>Entra con tu correo</h2><p class="nota">El mismo correo que diste al comprar. Te enviamos un código de 6 dígitos.</p><input id="em" type="email" inputmode="email" autocomplete="email" placeholder="tucorreo@gmail.com"><div class="err" id="er">' + esc(msg || '') + '</div><button class="btn" id="b1" onclick="pedir()">Enviarme el código</button></div>' + instalar;
+  iosAviso();
+}
+async function pedir(){
+  const em = $('#em').value.trim(); if (!em) return; $('#b1').disabled = true; $('#er').textContent = '';
+  try { const r = await rpc('micuenta_codigo_pedir', { p_email: em });
+    if (r === 'correo_invalido') { $('#er').textContent = 'Revisa tu correo, parece incompleto.'; $('#b1').disabled = false; return; }
+    if (r === 'espera') { $('#er').textContent = 'Pediste muchos códigos. Intenta en una hora.'; $('#b1').disabled = false; return; }
+    if (r === 'sin_correo_configurado') { $('#er').textContent = 'Todavía no enviamos códigos. Usa el enlace que te mandó tu asesora.'; $('#b1').disabled = false; return; }
+    LS.s('mc_email', em);
+    app.innerHTML = '<h1>Mi cuenta</h1><div class="card"><h2>Revisa tu correo</h2><p class="nota">Si <b>' + esc(em) + '</b> tiene pedidos en Tulula, te llegó un código. Mira también en Spam o Promociones.</p><input id="cd" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000"><div class="err" id="er"></div><button class="btn" id="b2" onclick="validar()">Entrar</button><p></p><button class="btn sec" onclick="entrar()">Usar otro correo</button></div>';
+  } catch(e) { $('#er').textContent = 'No pudimos conectarnos. Intenta otra vez.'; $('#b1').disabled = false; }
+}
+async function validar(){
+  const cd = $('#cd').value.trim(), em = LS.g('mc_email'); if (cd.length !== 6) return; $('#b2').disabled = true;
+  try { const t = await rpc('micuenta_codigo_validar', { p_email: em, p_codigo: cd });
+    if (!t) { $('#er').textContent = 'Código incorrecto o vencido.'; $('#b2').disabled = false; return; }
+    LS.s('mc_sesion', t); misPedidos();
+  } catch(e) { $('#er').textContent = 'No pudimos conectarnos. Intenta otra vez.'; $('#b2').disabled = false; }
+}
+// 26-nov (Pablo) · la cuenta en 4 módulos: Mis pedidos (en curso arriba + anteriores), Puntos y nivel, Cambios, Mi cuenta (datos y avisos)
+const ACT = x => !/ENTREGADO|ANULADO|DEVOLUCION/i.test(String(x && x.estado || ''));
+function armar(nombre, P, llave){
+  const cur = P.filter(ACT), nros = cur.map(x => String(x.nro));
+  app.innerHTML = '<h1>' + (nombre ? 'Hola, ' + esc(nombre) : 'Mi cuenta') + '</h1>'
+    + '<nav class="tabs">' + [['ped', 'Mis pedidos'], ['pun', 'Puntos y nivel'], ['cam', 'Cambios'], ['cta', 'Mi cuenta']].map((t, i) => '<button data-t="' + t[0] + '"' + (i ? '' : ' class="on"') + ' onclick="tab(\'' + t[0] + '\')">' + t[1] + '</button>').join('') + '</nav>'
+    + '<section data-s="ped"><div class="card" id="cor-q" style="display:none"><h2>🎁 Activa tu cuenta y gana 500 puntos</h2><p class="nota">Equivalen a S/ 10 de descuento en tu próxima compra. Escribe tu correo:</p><input id="cor-e" type="email" inputmode="email" autocomplete="email" placeholder="tucorreo@ejemplo.com" style="width:100%;margin:8px 0"><label class="sw"><span>Quiero recibir lanzamientos y descuentos exclusivos por correo (necesario para los 500 puntos). Me doy de baja cuando quiera.</span><input type="checkbox" id="cor-a"></label><button class="btn" style="margin-top:10px" onclick="correoAgregar(this)">Activar mi cuenta</button><p class="nota" id="cor-er"></p></div><div class="card" id="av-q" style="display:none"><h2>¿Quieres enterarte primero?</h2><p class="nota"><b>🎁 Acepta y gana 500 puntos = S/ 10 de descuento</b> en tu próxima compra. Lanzamientos y descuentos exclusivos para clientas, por correo. Puedes darte de baja cuando quieras.</p><div style="display:flex;gap:8px;margin-top:10px"><button class="btn" onclick="noveSi(this)">Sí, quiero</button><button class="btn sec" onclick="noveNo()">Ahora no</button></div></div>' + (cur.length ? cur.map(tarjeta).join('') : '') + '<div class="card" id="hist" style="display:none"><h2 id="hist-t">Pedidos anteriores</h2><div id="hist-l"></div></div>' + vitrinaCaja() + '</section>'
+    + '<section data-s="pun" style="display:none">' + perfilCaja() + '</section>'
+    + '<section data-s="cam" style="display:none"><div class="card"><h2>Cambios y devoluciones</h2><p class="nota">¿Una talla no te quedó o quieres otro color? Escríbenos con tu número de pedido y lo resolvemos.</p><a class="btn wa" style="display:block;text-align:center;text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/' + WA + '?text=' + encodeURIComponent('Hola 😊 Quiero hacer un cambio de mi pedido' + (P[0] ? ' #' + P[0].nro : '') + '.') + '">Quiero hacer un cambio</a></div></section>'
+    + '<section data-s="cta" style="display:none"><div class="card" id="cumple-box" style="display:none"></div>' + avisosCaja() + instalar + '</section>';
+  iosAviso(); if (evInst) $('#inst').style.display = 'block'; avisosCargar(llave); perfilCargar(llave); vitrinaCargar(P); historialCargar(llave, nros, !cur.length);
+}
+function tab(t){ document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.t === t)); document.querySelectorAll('section[data-s]').forEach(x => x.style.display = x.dataset.s === t ? '' : 'none'); scrollTo(0, 0); }
+async function historialCargar(llave, nros, soloHist){
+  try { const H = ((await rpc('micuenta_historial', { p_llave: llave })) || []).filter(x => nros.indexOf(String(x.nro)) < 0); if (!H.length) return;
+    const fd = t => t ? new Date(t).toLocaleDateString('es-PE', { timeZone: 'America/Lima', day: '2-digit', month: 'short', year: 'numeric' }).replace('.', '') : '';
+    const nombreBase = t => String(t || '').split(/\s*·\s*/)[0].replace(/\b(XS|S|M|L|XL|XXL|U|\d{2})\s*$/i, '').trim();
+    // 26-nov · los que siguen en curso van arriba con su propio título; los entregados abajo («Pedidos anteriores»)
+    const EST = { SEPARAR: 'separado', ENVIAR: 'por enviar', URGENTE: 'por enviar', 'EN CAMINO': 'en camino', ENTREGADO: 'entregado', ANULADO: 'anulado' };
+    const fila = (x, act) => '<div class="hrow" onclick="this.nextElementSibling.classList.toggle(\'ver\')"><div><b>Pedido #' + esc(x.nro) + '</b><br><span>' + esc(fd(x.fecha)) + ' · ' + esc(EST[String(x.estado || '').toUpperCase()] || String(x.estado || '').toLowerCase()) + '</span></div><b>' + sol(x.total) + '</b></div>'
+      + '<div class="hdet">' + (x.prendas ? '<ul class="prendas">' + String(x.prendas).split(/\s*·\s*/).filter(Boolean).map(y => '<li>' + esc(y) + '</li>').join('') + '</ul>' : '')
+      + '<p class="nota">Total ' + sol(x.total) + ' · Pagado ' + sol(x.pagado) + (Number(x.debe) > 0.5 ? ' · <b>Falta S/ ' + Number(x.debe).toFixed(2) + '</b>' : '') + '</p>'
+      + (!act && x.prendas ? '<a class="btn sec" style="display:block;text-align:center;text-decoration:none;margin-top:8px" target="_blank" rel="noopener" href="' + TIENDA + '/search?q=' + encodeURIComponent(nombreBase(x.prendas)) + '&utm_source=micuenta&utm_medium=comprar_de_nuevo">Volver a comprar</a>' : '') + '</div>';
+    const Ha = H.filter(ACT), Hv = H.filter(x => !ACT(x));
+    $('#hist-t').textContent = Ha.length ? (soloHist ? 'Mis pedidos en curso' : 'Otros pedidos en curso') : (soloHist ? 'Mis pedidos' : 'Pedidos anteriores');
+    $('#hist-l').innerHTML = Ha.map(x => fila(x, true)).join('') + (Ha.length && Hv.length ? '<h2 style="margin-top:14px">Pedidos anteriores</h2>' : '') + Hv.map(x => fila(x, false)).join('');
+    $('#hist').style.display = 'block';
+  } catch(_) {}
+}
+async function misPedidos(){
+  const t = LS.g('mc_sesion'); if (!t) return entrar();
+  try { const r = await rpc('micuenta_mis_pedidos', { p_sesion: t });
+    if (!r) { LS.s('mc_sesion', null); return entrar('Tu sesión venció. Entra otra vez.'); }
+    const P = r.pedidos || [], n = P[0] && P[0].nombre;
+    $('#salir').style.display = '';
+    if (!P.length) { app.innerHTML = '<h1>Mi cuenta</h1><div class="card"><p class="nota">Aún no vemos pedidos con este correo.</p></div>'; return; }
+    armar(n, P, t);
+  } catch(e) { app.innerHTML = '<div class="card"><p class="err">No pudimos conectarnos. Revisa tu internet.</p><button class="btn" onclick="misPedidos()">Reintentar</button></div>'; }
+}
+async function porEnlace(tok){
+  try { const p = await rpc('micuenta_por_enlace', { p_token: tok });
+    if (!p) return entrar('Ese enlace no es válido. Entra con tu correo.');
+    guardarEnlace(tok);
+    const otros = enlaces().filter(t => t !== tok), mas = [];   // 25-nov · solo pedidos de la MISMA clienta (p.cli); nunca mezclar clientas en un celular compartido
+    for (const t of otros) { try { const q = await rpc('micuenta_por_enlace', { p_token: t }); if (q && p.cli && q.cli === p.cli && q.nro !== p.nro) mas.push(q); } catch(_){} }
+    armar(p.nombre, [p].concat(mas), tok);
+  } catch(e) { app.innerHTML = '<div class="card"><p class="err">No pudimos conectarnos. Revisa tu internet.</p><button class="btn" onclick="location.reload()">Reintentar</button></div>'; }
+}
+// 25-nov · enlaces abiertos en este celular (la app instalada los muestra sin pedir correo)
+function enlaces(){ try { return JSON.parse(LS.g('mc_enlaces') || '[]'); } catch(_) { return []; } }
+function guardarEnlace(t){ const L = [t].concat(enlaces().filter(x => x !== t)).slice(0, 10); LS.s('mc_enlaces', JSON.stringify(L)); }
+// 25-nov · Fase 1 «Mis avisos»: la clienta elige qué recibe; cada cambio queda con fecha y hora en la base
+// 26-nov (Pablo) · solo 2 opciones. «Estado de mis pedidos» es del servicio; «Lanzamientos y descuentos» es UNA sola aceptación
+// que guarda lanzamientos + descuentos + puntos. Nunca premarcada ni obligatoria para entrar (Código del Consumidor art. 58.1 e y Ley 29733: consentimiento libre y expreso).
+const AVISOS = [['pedido', 'Estado de mis pedidos'], ['novedades', 'Lanzamientos y descuentos exclusivos']];
+const NOVE = ['lanzamientos', 'descuentos', 'puntos'];
+let _llave = null;
+// 25-nov (Pablo) · «Mi cuenta»: nivel por compras de los últimos 12 meses, cumpleaños (20%) y puntos
+let _pf = null;
+// 26-nov (Pablo) · PUNTOS_SEPHORA · igual que Sephora: 1 punto por S/ 1, 500 puntos = S/ 10; Super VIP también 1 000 = S/ 20 y 2 500 = prenda hasta S/ 100
+const PTS_SOL = 50, pts = n => Number(n || 0).toLocaleString('es-PE'), ptsSol = n => 'S/ ' + (Number(n || 0) / PTS_SOL).toFixed(2);
+function perfilCaja(){ return '<div class="card" id="perfil" style="display:none"><h2>Mis puntos y nivel</h2><div id="pf"></div><details style="margin-top:12px"><summary class="nota" style="cursor:pointer">Condiciones del programa de puntos</summary><ol class="nota" style="padding-left:18px;margin:8px 0 0"><li>Ganas 1 punto por cada S/ 1 que pagas en prendas, después de descuentos. El envío no suma.</li><li>Tus puntos se suman 7 días después de recibir tu pedido pagado completo. Antes aparecen «por acreditar».</li><li>Si devuelves una prenda, se restan sus puntos. Un cambio de talla o color no resta.</li><li>500 puntos = S/ 10 de descuento. Super VIP: además 1 000 puntos = S/ 20 y 2 500 puntos = una prenda de hasta S/ 100.</li><li>Se canjean en prendas a precio de lista (no en ofertas, Yayitas ni envío), en pedidos desde S/ 10, un canje por pedido. Pídeselo a tu asesora al hacer tu pedido.</li><li>No se combinan con cupones, ofertas ni el descuento de cumpleaños en el mismo pedido.</li><li>Vencen si pasan 12 meses sin que compres ni canjees. Cada compra o canje renueva todos tus puntos.</li><li>Si devuelves una prenda pagada en parte con puntos, se te devuelve lo que pagaste; los puntos usados no se devuelven.</li><li>Los puntos no son dinero: no se cambian por efectivo ni se transfieren. Una cuenta por clienta.</li><li>Bono de bienvenida: 500 puntos al activar tu cuenta con tu correo y aceptar novedades (una sola vez).</li><li>Suman las compras hechas desde el 26/11/2026.</li></ol></details></div>'; }
+const sol = n => 'S/ ' + Number(n || 0).toLocaleString('es-PE', { maximumFractionDigits: 0 });
+async function perfilCargar(llave){
+  try { const r = await rpc('micuenta_perfil_leer', { p_llave: llave }); if (!r) return; _pf = r;
+    const MES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','setiembre','octubre','noviembre','diciembre'];
+    let h = '<p style="margin:6px 0"><span class="chip' + (r.nivel === 'Clienta Tulula' ? '' : ' vip') + '">' + esc(r.nivel) + '</span> <button class="lnk" onclick="beneficios()">Conoce los beneficios</button></p>';
+    if (r.siguiente) h += '<p class="nota">' + (Number(r.pendiente) > 0
+      ? 'Cuando completes tu pago de ' + sol(r.pendiente) + (Number(r.falta_despues) > 0 ? ', te faltarán ' + sol(r.falta_despues) + ' en compras para ser ' + esc(r.siguiente) + '.' : ', ¡pasas a ' + esc(r.siguiente) + '!')
+      : 'Te faltan ' + sol(r.falta) + ' en compras para ser ' + esc(r.siguiente) + '.') + '</p>';
+    let hc = '<h2>Mis datos</h2>';
+    if (r.cumple) { const f = r.cumple.split('-'); hc += '<div class="sw"><span>🎂 Tu cumpleaños</span><b>' + Number(f[2]) + ' de ' + MES[Number(f[1]) - 1] + '</b></div>'; }
+    else hc += '<div class="sw" style="display:block"><b>¿Quieres que te regalemos 20% de descuento en tu mes de cumpleaños?</b><button class="btn" style="margin-top:10px" onclick="cumpleAbrir()">Sí, quiero mi regalo</button></div>';
+    if (r.correo) hc += '<div class="sw"><span>Correo</span><b>' + esc(r.correo) + '</b></div>';
+    const cb = $('#cumple-box'); if (cb) { cb.innerHTML = hc; cb.style.display = 'block'; }
+    h += '<div class="sw" style="display:block"><div style="display:flex;justify-content:space-between"><span>⭐ Mis puntos</span><b>' + pts(r.puntos) + ' <small style="font-weight:500">= ' + ptsSol(r.puntos) + '</small></b></div>'
+      + (Number(r.puntos_en_curso) > 0 ? '<p class="nota">Al completar tu pedido ganarás <b>' + pts(r.puntos_en_curso) + ' puntos (' + ptsSol(r.puntos_en_curso) + ')</b>.</p>' : '') + (Number(r.puntos_por_acreditar) > 0 ? '<p class="nota">⏳ <b>' + pts(r.puntos_por_acreditar) + ' puntos</b> por acreditar: se suman 7 días después de recibir tu pedido.</p>' : '') + (r.puntos_vence ? '<p class="nota">Tus puntos vencen el ' + esc(r.puntos_vence) + ' si antes no compras ni canjeas.</p>' : '') + '<p class="nota">1 punto por cada S/ 1 · 500 puntos = S/ 10 de descuento.</p></div>';
+    $('#pf').innerHTML = h; $('#perfil').style.display = 'block';
+  } catch(_) {}
+}
+function velo(html){ const v = document.createElement('div'); v.className = 'velo'; v.innerHTML = '<div class="card">' + html + '<button class="btn sec" style="margin-top:10px" onclick="this.closest(\'.velo\').remove()">Cerrar</button></div>'; v.onclick = e => { if (e.target === v) v.remove(); }; document.body.appendChild(v); }
+function beneficios(){   // 26-nov (Pablo) · comparativo por nivel en tabla; textos y montos salen del ERP (Configuración › Segmentos): una sola fuente
+  const r = _pf || { vip: 600, svip: 1200, beneficios: {} }, B = r.beneficios || {};
+  const DEF = { 'NUEVA': 'Envío gratis desde S/ 100 en tu primer pedido; 1 punto por cada S/ 1',
+    'CLIENTA': 'Envío gratis desde S/ 200; 1 punto por cada S/ 1; 20% en un pedido en tu mes de cumpleaños; Visita al showroom',
+    'VIP': '1 punto por cada S/ 1; Nuevos ingresos antes que nadie; más todo lo de Clienta',
+    'SUPER VIP': '1 punto por cada S/ 1; 2 500 puntos = una prenda de hasta S/ 100; Asesora personal; Un regalo al año; más todo lo de VIP' };
+  const lista = (k, n) => { if ((n || 0) > 4) return []; let out = [];
+    String(B[k] || DEF[k] || '').split(/\s*;\s*/).filter(Boolean).forEach(x => { const m = /m[aá]s todo lo de\s+(.+)/i.exec(x);
+      if (m) out = out.concat(lista(m[1].trim().replace(/\.$/, '').toUpperCase(), (n || 0) + 1)); else out.push(x); }); return out; };
+  const NIV = [['NUEVA', 'Nueva'], ['CLIENTA', 'Clienta'], ['VIP', 'VIP'], ['SUPER VIP', 'Super VIP']];
+  const FIL = [
+    ['Cómo llegas', k => ({ 'NUEVA': 'Te registras', 'CLIENTA': 'Tu 1.ª compra', 'VIP': sol(r.vip) + ' en 12 meses', 'SUPER VIP': sol(r.svip) + ' en 12 meses' })[k]],
+    ['Puntos por S/ 1', k => { const x = lista(k).map(t => /([\d,\.]+)\s*puntos?\s+por cada/i.exec(t)).find(Boolean); return x ? x[1] : '—'; }],
+    ['Envío gratis', k => { const x = lista(k).map(t => /env[ií]o gratis\s+(.+)/i.exec(t)).find(Boolean); return x ? x[1] : '—'; }],
+    ['Cumpleaños', k => { const x = lista(k).map(t => /(\d+\s*%).*cumplea/i.exec(t)).find(Boolean); return x ? x[1].replace(/\s/g, '') + ' en un pedido' : '—'; }],
+    ['Visita al showroom', k => lista(k).some(t => /showroom/i.test(t)) ? '✓' : '—'],
+    ['Nuevos ingresos antes', k => lista(k).some(t => /nuevos ingresos/i.test(t)) ? '✓' : '—'],
+    ['Asesora personal', k => lista(k).some(t => /asesora/i.test(t)) ? '✓' : '—'],
+    ['Regalo al año', k => lista(k).some(t => /regalo/i.test(t)) ? '✓' : '—']];
+  const yo = /super/i.test(r.nivel || '') ? 'SUPER VIP' : /vip/i.test(r.nivel || '') ? 'VIP' : (Number(r.pedidos || 1) > 0 ? 'CLIENTA' : 'NUEVA');
+  velo('<h2>Beneficios Tulula</h2><p class="nota">El nivel se calcula con tus compras de los últimos 12 meses. Si un año compras menos, lo mantienes un año más.</p>'
+    + '<div style="overflow-x:auto"><table class="bt"><thead><tr><th></th>' + NIV.map(n => '<th' + (n[0] === yo ? ' class="yo"' : '') + '>' + n[1] + (n[0] === yo ? '<br>(tú)' : '') + '</th>').join('') + '</tr></thead><tbody>'
+    + FIL.map(f => '<tr><td>' + f[0] + '</td>' + NIV.map(n => '<td' + (n[0] === yo ? ' class="yo"' : '') + '>' + esc(f[1](n[0]) || '—') + '</td>').join('') + '</tr>').join('')
+    + '</tbody></table></div><p class="nota" style="margin-top:8px">500 puntos = S/ 10 de descuento. Super VIP además: 1 000 puntos = S/ 20 y 2 500 puntos = una prenda de hasta S/ 100.</p>');
+}
+function cumpleAbrir(){
+  const M = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Setiembre','Octubre','Noviembre','Diciembre'], y = new Date().getFullYear();
+  const op = (a, b, f) => { let o = ''; for (let i = a; (a < b ? i <= b : i >= b); i += (a < b ? 1 : -1)) o += '<option value="' + i + '">' + (f ? f(i) : i) + '</option>'; return o; };
+  velo('<h2>Tu fecha de cumpleaños</h2><p class="nota">En tu mes de cumpleaños te regalamos 20% de descuento en un pedido completo.</p>'
+    + '<div style="display:grid;grid-template-columns:1fr 1.6fr 1.2fr;gap:8px;margin-top:10px"><select id="cd-d"><option value="">Día</option>' + op(1, 31) + '</select><select id="cd-m"><option value="">Mes</option>' + op(1, 12, i => M[i - 1]) + '</select><select id="cd-a"><option value="">Año</option>' + op(y - 15, 1940) + '</select></div>'
+    + '<p class="nota" style="margin-top:10px">⚠️ Ojo: tu fecha <b>no se podrá cambiar</b> después. Revisa que esté correcta.</p><div class="err" id="cd-e"></div><button class="btn" id="cd-b" onclick="cumpleGuardar()">Guardar mi cumpleaños</button>');
+}
+async function cumpleGuardar(){
+  const d = $('#cd-d').value, m = $('#cd-m').value, a = $('#cd-a').value;
+  if (!d || !m || !a) { $('#cd-e').textContent = 'Elige día, mes y año.'; return; }
+  const f = a + '-' + String(m).padStart(2, '0') + '-' + String(d).padStart(2, '0'), t = new Date(f + 'T12:00:00');
+  if (t.getMonth() + 1 !== Number(m)) { $('#cd-e').textContent = 'Esa fecha no existe. Revisa el día.'; return; }
+  $('#cd-b').disabled = true;
+  try { const r = await rpc('micuenta_cumple_guardar', { p_llave: _llave, p_fecha: f });
+    if (r === 'ok' || r === 'ya') { document.querySelector('.velo').remove(); return perfilCargar(_llave); }
+    $('#cd-e').textContent = r === 'fecha' ? 'Revisa la fecha.' : 'No pudimos guardarlo. Intenta otra vez.'; $('#cd-b').disabled = false;
+  } catch(_) { $('#cd-e').textContent = 'No pudimos conectarnos.'; $('#cd-b').disabled = false; }
+}
+function avisosCaja(){ return '<div class="card" id="avisos" style="display:none"><h2 id="av-t">Mis avisos</h2><p class="nota" id="av-n"></p><div id="av-l"></div></div>'; }
+async function avisosCargar(llave){
+  _llave = llave;
+  try { const r = await rpc('micuenta_pref_leer', { p_llave: llave }); if (r && r.sin_correo) { const c = $('#cor-q'); if (c) c.style.display = 'block'; return; } if (!r) return;
+    $('#av-t').textContent = r.elegido ? 'Mis avisos' : '¿Qué quieres que te avisemos?';
+    $('#av-n').textContent = 'Por correo a ' + r.correo + '. Puedes cambiarlo cuando quieras.';
+    r.prefs.novedades = NOVE.every(k => r.prefs[k]);
+    $('#av-l').innerHTML = AVISOS.map(([k, t]) => '<label class="sw"><span>' + esc(t) + '</span><input type="checkbox" data-k="' + k + '"' + (r.prefs[k] ? ' checked' : '') + ' onchange="avisoCambiar(this)"></label>').join('');
+    $('#avisos').style.display = 'block';
+    // arriba de Mis pedidos, una sola pregunta (si todavía no aceptó y no dijo «ahora no» hace menos de 30 días)
+    const q = $('#av-q'); let no = 0; try { no = Number(LS.g('mc_nove_no') || 0); } catch(_) {}
+    if (q && !r.prefs.novedades && Date.now() - no > 30 * 864e5) { q.style.display = 'block'; }
+  } catch(_) {}
+}
+function noveSi(b){ const el = document.querySelector('#av-l input[data-k="novedades"]'); b.disabled = true; if (el) { el.checked = true; avisoCambiar(el).then(() => { $('#av-q').innerHTML = '<p class="nota" style="margin:0">¡Listo! Ganaste 500 puntos (S/ 10 de descuento). Te avisaremos primero de lanzamientos y descuentos. Puedes cambiarlo en Mi cuenta.</p>'; }); } }
+function noveNo(){ try { LS.s('mc_nove_no', String(Date.now())); } catch(_) {} $('#av-q').style.display = 'none'; }
+async function avisosTodos(){
+  const b = $('#av-todo'); if (b) b.disabled = true;
+  for (const el of document.querySelectorAll('#av-l input')) if (!el.checked) { el.checked = true; await avisoCambiar(el); }
+  if (b) b.remove();
+}
+// 26-nov (Pablo) · CORREO_APP_26NOV · pedido sin correo: la clienta lo agrega aquí. Los 500 puntos solo con la casilla marcada por ella (ley: consentimiento libre y expreso).
+async function correoAgregar(b){
+  const em = String($('#cor-e').value || '').trim(), acepta = $('#cor-a').checked, er = $('#cor-er'); er.textContent = ''; b.disabled = true;
+  try { const r = await rpc('micuenta_correo_agregar', { p_llave: _llave, p_email: em });
+    if (r === 'correo_invalido') { er.textContent = 'Revisa tu correo, parece incompleto.'; b.disabled = false; return; }
+    if (r !== 'ok' && r !== 'ya_tiene') { er.textContent = 'No se pudo guardar. Intenta en un momento.'; b.disabled = false; return; }
+    if (acepta) for (const t of NOVE) await rpc('micuenta_pref_guardar', { p_llave: _llave, p_tipo: t, p_activo: true });
+    $('#cor-q').innerHTML = '<p class="nota" style="margin:0">' + (acepta ? '¡Listo! Ganaste 500 puntos (S/ 10 de descuento). Te avisaremos de tu pedido y de lo nuevo a ' : '¡Listo! Te avisaremos de tu pedido a ') + esc(em) + '.</p>';
+    avisosCargar(_llave); perfilCargar(_llave);
+  } catch(_) { er.textContent = 'No se pudo guardar. Intenta en un momento.'; b.disabled = false; }
+}
+async function avisoCambiar(el){
+  el.disabled = true;
+  try { const T = el.dataset.k === 'novedades' ? NOVE : [el.dataset.k]; let ok = true;
+    for (const t of T) { const r = await rpc('micuenta_pref_guardar', { p_llave: _llave, p_tipo: t, p_activo: el.checked }); if (r !== 'ok') ok = false; }
+    if (!ok) el.checked = !el.checked; $('#av-t').textContent = 'Mis avisos'; }
+  catch(_) { el.checked = !el.checked; }
+  el.disabled = false;
+}
+// 25-nov · Fase 2 «Vitrina»: prendas de tulula.com.pe con stock real; todo enlace sale marcado utm_source=micuenta
+const TIENDA = 'https://tulula.com.pe', WA = '51978102203';
+const UTM = c => 'utm_source=micuenta&utm_medium=app&utm_campaign=' + c;
+function vitrinaCaja(){ return '<div class="card" id="vt-c" style="display:none"><h2>Combina con tu compra</h2><div class="fila" id="vt-c-l"></div></div><div class="card" id="vt-n" style="display:none"><h2>Lo nuevo de Tulula</h2><div class="fila" id="vt-n-l"></div><a class="btn sec" style="display:block;text-align:center;text-decoration:none;margin-top:12px" id="vt-todo" target="_blank" rel="noopener">Ver más</a></div><div class="card" id="vt-w" style="display:none"><h2>¿Te ayudamos a elegir?</h2><a class="btn wa" style="display:block;text-align:center;text-decoration:none" id="vt-as" target="_blank" rel="noopener">Chatear con una asesora</a><a class="btn sec" style="display:block;text-align:center;text-decoration:none;margin-top:10px" id="vt-sh" target="_blank" rel="noopener">Agendar cita virtual o presencial</a></div>'; }
+const _norm = t => String(t || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+function _prod(p, camp){
+  const v = (p.variants || []).filter(x => x.available), img = p.images && p.images[0] && p.images[0].src;
+  if (!v.length || !img) return '';
+  const pr = Math.min.apply(null, v.map(x => Number(x.price))), ORD = ['XS','S','M','L','XL','2XL','3XL','U'], tallas = Array.from(new Set(v.map(x => String(x.title).split(' / ').pop()))).sort((a, b) => (ORD.indexOf(a) + 99) % 99 - (ORD.indexOf(b) + 99) % 99).slice(0, 5).join(' · ');
+  return '<a target="_blank" rel="noopener" href="' + TIENDA + '/products/' + encodeURIComponent(p.handle) + '?' + UTM(camp) + '"><img loading="lazy" alt="' + esc(p.title) + '" src="' + esc(img) + (img.indexOf('?') > 0 ? '&' : '?') + 'width=360"><b>' + esc(p.title) + '</b><span>S/ ' + pr.toFixed(2) + ' · ' + esc(tallas) + '</span></a>';
+}
+async function vitrinaCargar(P){
+  try {
+    const nro = P[0] && P[0].nro;
+    $('#vt-as').href = 'https://wa.me/' + WA + '?text=' + encodeURIComponent('Hola 😊 Soy clienta' + (nro ? ' del pedido #' + nro : '') + ' y quiero que me ayuden a elegir más prendas.');
+    $('#vt-sh').href = 'https://wa.me/' + WA + '?text=' + encodeURIComponent('Hola 😊 Quiero agendar una cita para ver prendas (virtual o presencial).');
+    $('#vt-todo').href = TIENDA + '/collections/nuevos-ingresos?' + UTM('nuevo');
+    $('#vt-w').style.display = 'block';
+    const r = await fetch(TIENDA + '/products.json?limit=250'); if (!r.ok) return;
+    const L = ((await r.json()).products || []).filter(p => !/RESERVA|GIFT|TARJETA/i.test(p.title + ' ' + p.product_type));
+    const compradas = P.map(x => _norm(x.prendas)).join(' | ');
+    const familias = Array.from(new Set(compradas.split(/[|·]/).map(t => t.trim().split(/\s+/)[1]).filter(w => w && w.length > 3)));
+    const comb = L.filter(p => { const t = _norm(p.title); return familias.some(f => t.indexOf(f) >= 0) && compradas.indexOf(t) < 0; }).map(p => _prod(p, 'combina')).filter(Boolean).slice(0, 4);
+    if (comb.length) { $('#vt-c-l').innerHTML = comb.join(''); $('#vt-c').style.display = 'block'; }
+    const nuevos = L.slice().sort((a, b) => String(b.created_at).localeCompare(String(a.created_at))).map(p => _prod(p, 'nuevo')).filter(Boolean).slice(0, 4);
+    if (nuevos.length) { $('#vt-n-l').innerHTML = nuevos.join(''); $('#vt-n').style.display = 'block'; }
+  } catch(_) {}
+}
+function salir(){ LS.s('mc_sesion', null); entrar(); }
+const tok = new URLSearchParams(location.search).get('p');
+if (tok) porEnlace(tok); else if (LS.g('mc_sesion')) misPedidos(); else if (enlaces().length) porEnlace(enlaces()[0]); else entrar();
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>
