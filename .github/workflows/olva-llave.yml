@@ -1,0 +1,22 @@
+# Tulula · renueva la llave de Olva Zona Clientes 2 veces al día (5:50 am y 1:50 pm Lima) con un navegador en la nube.
+name: Olva llave diaria
+on:
+  schedule:
+    - cron: '50 10 * * *'
+    - cron: '50 18 * * *'
+  workflow_dispatch:
+jobs:
+  renovar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm i --no-save playwright@1.48.2 && npx playwright install --with-deps chromium
+      - run: node .github/olva/renovar.mjs
+        env:
+          OLVA_USUARIO: '120609910969'
+          OLVA_CLAVE: ${{ secrets.OLVA_CLAVE }}
+          PUENTE_CLAVE: ${{ secrets.PUENTE_CLAVE }}
