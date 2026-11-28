@@ -192,7 +192,8 @@ async function validar(){
 // 26-nov (Pablo) · la cuenta en 4 módulos: Mis pedidos (en curso arriba + anteriores), Puntos y nivel, Cambios, Mi cuenta (datos y avisos)
 const VER = new URLSearchParams(location.search).get('ver') === '1';
 // 28-nov (Pablo) · «Puntos y nivel» y «Cambios» ocultos por ahora (Puntos sale vacío; Cambios se rehace). Vuelven agregándolos aquí.
-const TABS_MC = [['ped', 'Mis pedidos'], ['cta', 'Mi cuenta']];
+// 28-nov 11:00 (Pablo aprobó) · 3 pestañas como Sephora: Mis pedidos · Cambios · Mi perfil (los puntos van arriba dentro de Mi perfil)
+const TABS_MC = [['ped', 'Mis pedidos'], ['cam', 'Cambios'], ['cta', 'Mi perfil']];
 document.documentElement.style.setProperty('--ntab', TABS_MC.length);
 const ACT = x => !/ENTREGADO|ANULADO|DEVOLUCION/i.test(String(x && x.estado || ''));
 function armar(nombre, P, llave){
@@ -200,13 +201,14 @@ function armar(nombre, P, llave){
   app.innerHTML = '<h1>' + (nombre ? 'Hola, ' + esc(nombre) : 'Mi cuenta') + '</h1>'
     + '<nav class="tabs">' + TABS_MC.map((t, i) => '<button data-t="' + t[0] + '"' + (i ? '' : ' class="on"') + ' onclick="tab(\'' + t[0] + '\')">' + t[1] + '</button>').join('') + '</nav>'
     + '<section data-s="ped"><div class="card" id="push-q" style="display:none"><h2>🔔 ¿Te avisamos cuando llegue tu pedido?</h2><p class="nota">Te llega un aviso a este celular en cada paso, sin abrir el correo.</p><button class="btn" onclick="tab(\'cta\')">Activar avisos</button></div><div class="card" id="cor-q" style="display:none"><h2>🎁 Activa tu cuenta y gana 500 puntos canjeables</h2><p class="nota">Equivalen a S/ 10 de descuento en tu próxima compra. Escribe tu correo:</p><input id="cor-e" type="email" inputmode="email" autocomplete="email" placeholder="tucorreo@ejemplo.com" style="width:100%;margin:8px 0"><label class="sw"><span>Quiero recibir lanzamientos y descuentos exclusivos por correo (necesario para los 500 puntos). Me doy de baja cuando quiera.</span><input type="checkbox" id="cor-a"></label><button class="btn" style="margin-top:10px" onclick="correoAgregar(this)">Activar mi cuenta</button><p class="nota" id="cor-er"></p></div><div class="card" id="av-q" style="display:none"><h2>¿Quieres enterarte primero?</h2><p class="nota"><b>🎁 Acepta y gana 500 puntos = S/ 10 de descuento</b> en tu próxima compra. Lanzamientos y descuentos exclusivos para clientas, por correo. Puedes darte de baja cuando quieras.</p><div style="display:flex;gap:8px;margin-top:10px"><button class="btn" onclick="noveSi(this)">Sí, quiero</button><button class="btn sec" onclick="noveNo()">Ahora no</button></div></div>' + (cur.length ? '<div class="card"><h2 class="tgl abierto" onclick="this.classList.toggle(\'abierto\'); this.nextElementSibling.style.display = this.classList.contains(\'abierto\') ? \'\' : \'none\'">' + (cur.length > 1 ? 'Pedidos en curso (' + cur.length + ')' : 'Pedido en curso') + '</h2><div>' + cur.map(tarjeta).join('') + '</div></div>' : '') + '<div class="card" id="hist" style="display:none"><h2 id="hist-t">Pedidos anteriores</h2><div id="hist-l"></div></div>' + vitrinaCaja() + '</section>'
-    + '<section data-s="pun" style="display:none">' + perfilCaja() + '</section>'
+    
     + '<section data-s="cam" style="display:none"><div class="card"><h2>Cambios</h2><p class="nota">Tienes hasta ' + D_CAMBIO + ' días calendario desde que recibes tu pedido para solicitar un cambio de talla, color o modelo.</p><div id="cam-l"><p class="nota">Cargando tus pedidos…</p></div><a class="btn wa" style="display:block;text-align:center;text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/' + WA + '?text=' + encodeURIComponent('Hola 😊 Quiero hacer un cambio de mi pedido' + (P[0] ? ' #' + P[0].nro : '') + '.') + '">Gestionarlo con una asesora</a></div></section>'
-    + '<section data-s="cta" style="display:none"><div class="card" id="cumple-box" style="display:none"></div>' + pushCaja() + avisosCaja() + instalar + '</section>';
+    + '<section data-s="cta" style="display:none">' + perfilCaja() + '<div class="card" id="cumple-box" style="display:none"></div>' + datosCaja() + pushCaja() + avisosCaja() + instalar + '</section>';
   if (VER) { document.body.classList.add('ver'); app.insertAdjacentHTML('afterbegin', '<div class="ver-modo">👁 Estás viendo la cuenta de ' + esc(nombre || 'la clienta') + ' · solo lectura</div>'); } else iosAviso();
-  if (evInst && !VER) $('#inst').style.display = 'block'; avisosCargar(llave); pushCargar();   // PUSH_28NOV
+  if (evInst && !VER) $('#inst').style.display = 'block'; avisosCargar(llave); pushCargar(); datosCargar();   // PUSH_28NOV · PERFIL_28NOV
   { const q = new URLSearchParams(location.search); if (!VER && q.get('calif')) setTimeout(() => calAbrir(q.get('calif'), q.get('n')), 500); }   // ENCUESTA_27NOV
-  if (!VER) rpc('micuenta_visto', { p_llave: llave, p_instalada: !!(matchMedia('(display-mode: standalone)').matches || navigator.standalone) }).catch(() => {});   // 26-nov noche · el ERP sabe si la tiene instalada perfilCargar(llave); vitrinaCargar(P); historialCargar(llave, nros, !cur.length);
+  if (!VER) rpc('micuenta_visto', { p_llave: llave, p_instalada: !!(matchMedia('(display-mode: standalone)').matches || navigator.standalone) }).catch(() => {});   // 26-nov noche · el ERP sabe si la tiene instalada
+  perfilCargar(llave); vitrinaCargar(P); historialCargar(llave, nros, !cur.length);   // 28-nov · ARREGLO: esta línea había quedado DENTRO del comentario de arriba (puntos, vitrina, fecha y montos no cargaban)
 }
 // 26-nov noche (Pablo) · el bono vibra al abrir y cada 30 s para que se vea
 let _vib = null;
@@ -217,12 +219,12 @@ const D_CAMBIO = 15;
 const _diaLima = t => Date.parse(new Date(t).toLocaleDateString('en-CA', { timeZone: 'America/Lima' }));
 const _diasDesde = t => t ? Math.round((_diaLima(Date.now()) - _diaLima(t)) / 864e5) : null;
 function cambiosPintar(H){
-  const box = $('#cam-l'); if (!box) return;
+  _HT = H || []; const box = $('#cam-l'); if (!box) return;
   const L = (H || []).filter(x => /ENTREGADO/i.test(String(x.estado || ''))).slice(0, 6);
   if (!L.length) { box.innerHTML = '<p class="nota">Aún no tienes pedidos entregados. Cuando recibas tu pedido, aquí podrás solicitar tu cambio.</p>'; return; }
   box.innerHTML = L.map(x => { const d = _diasDesde(x.entregado), ok = d != null && d <= D_CAMBIO, q = D_CAMBIO - (d || 0), n = String(x.nro).replace(/\W/g, '');
     return '<div class="hrow" onclick="this.nextElementSibling.classList.toggle(\'ver\')"><div><b>Pedido #' + esc(x.nro) + '</b><br><span>' + (x.entregado ? 'Lo recibiste el ' + esc(fdia(x.entregado)) : 'Entregado') + '</span></div><span class="chip' + (ok ? ' ok' : '') + '">' + (ok ? (q === 0 ? 'Último día' : 'Quedan ' + q + (q === 1 ? ' día' : ' días')) : 'Sin cambio') + '</span></div>'
-      + '<div class="hdet">' + (ok ? cambioForm(x, n) : '<p class="nota">Tienes hasta ' + D_CAMBIO + ' días calendario desde que recibes tu pedido para solicitar un cambio. ' + (d != null ? 'Han pasado ' + d + ' días, por eso' : 'Por eso') + ' este pedido ya no aplica para cambio.</p>') + '</div>'; }).join('');
+      + '<div class="hdet">' + (ok ? '<button class="btn" onclick="cambioAbrir(\'' + n + '\')">Solicitar cambio</button>' : '<p class="nota">Tienes hasta ' + D_CAMBIO + ' días calendario desde que recibes tu pedido para solicitar un cambio. ' + (d != null ? 'Han pasado ' + d + ' días, por eso' : 'Por eso') + ' este pedido ya no aplica para cambio.</p>') + '</div>'; }).join('');
 }
 function cambioForm(x, n){
   const pr = String(x.prendas || '').split(/\s*·\s*/).filter(Boolean);
@@ -407,6 +409,96 @@ async function pushModo(m){
 async function pushQuitar(btn){
   btn.disabled = true;
   try { if (_psub) { await rpc('micuenta_push_quitar', { p_llave: _llave, p_endpoint: _psub.endpoint }); await _psub.unsubscribe(); } _psub = null; pushCargar(); } catch(_) { btn.disabled = false; }
+}
+// 28-nov (Pablo) · PERFIL_28NOV · «Para tus próximos pedidos»: nombre, celular, tallas, cómo prefiere recibir y hasta 5 direcciones.
+// Si nunca guardó nada, se propone lo de su último pedido. Referentes: Sephora (perfil con nivel arriba), Zara (direcciones guardadas).
+const ENT = { domicilio: 'Delivery a mi casa u oficina', shalom: 'Agencia Shalom', olva: 'Agencia Olva', recojo: 'Recojo en el almacén (Santa Anita)' };
+const T_ARR = ['XS', 'S', 'M', 'L', 'XL', 'XXL'], T_ABA = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '26', '28', '30', '32', '34'];
+let _dt = null;
+function datosCaja(){ return '<div class="card" id="dt" style="display:none"><h2>Para tus próximos pedidos</h2><p class="nota">Con esto tu asesora no te vuelve a preguntar nada.</p><div id="dt-v"></div></div>'; }
+async function datosCargar(){ if (!_llave) return; try { _dt = await rpc('micuenta_datos_leer', { p_llave: _llave }); if (!_dt) return; datosPintar(); $('#dt').style.display = 'block'; } catch(_) {} }
+const _dfila = (k, v) => '<div class="sw"><span>' + k + '</span><b>' + esc(v || '—') + '</b></div>';
+function datosPintar(){
+  const d = _dt, D = d.direcciones || [];
+  $('#dt-v').innerHTML = _dfila('Nombre', d.nombre) + _dfila('Celular', d.celular) + _dfila('Talla de arriba', d.talla_arriba) + _dfila('Talla de abajo', d.talla_abajo) + _dfila('Prefiero recibir', ENT[d.entrega])
+    + '<p class="nota" style="margin-top:12px"><b>Mis direcciones</b></p>' + (D.length ? D.map((x, i) => '<div class="sw" style="display:block"><b>' + esc(x.alias || 'Dirección ' + (i + 1)) + '</b><br><span class="nota">' + esc([x.direccion, x.distrito, x.provincia, x.region].filter(Boolean).join(', ')) + (x.referencia ? ' · Ref.: ' + esc(x.referencia) : '') + '</span></div>').join('') : '<p class="nota">Aún no tienes direcciones.</p>')
+    + (d.guardado || VER ? '' : '<p class="nota">Lo tomamos de tu último pedido. Revísalo y guárdalo.</p>') + (VER ? '' : '<button class="btn sec" style="margin-top:8px" onclick="datosEditar()">Editar mis datos</button>');
+}
+const _opt = (L, v) => '<option value="">—</option>' + L.map(x => '<option' + (String(v || '') === x ? ' selected' : '') + '>' + x + '</option>').join('');
+const _dirForm = (x, i) => '<div class="dir" style="border-top:1px solid var(--gr);padding-top:8px;margin-top:8px"><input data-k="alias" placeholder="Nombre (Casa, Oficina…)" value="' + esc(x.alias || '') + '"><input data-k="direccion" placeholder="Dirección" value="' + esc(x.direccion || '') + '"><input data-k="referencia" placeholder="Referencia" value="' + esc(x.referencia || '') + '"><input data-k="distrito" placeholder="Distrito" value="' + esc(x.distrito || '') + '"><input data-k="provincia" placeholder="Provincia" value="' + esc(x.provincia || '') + '"><input data-k="region" placeholder="Región" value="' + esc(x.region || '') + '"><button class="lnk" onclick="this.parentElement.remove()">Quitar esta dirección</button></div>';
+function datosEditar(){
+  const d = _dt || {};
+  velo('<h2>Mis datos</h2><label class="nota">Nombre</label><input id="de-n" value="' + esc(d.nombre || '') + '"><label class="nota">Celular</label><input id="de-c" type="tel" inputmode="tel" value="' + esc(d.celular || '') + '">'
+    + '<label class="nota">Talla de arriba</label><select id="de-ta">' + _opt(T_ARR, d.talla_arriba) + '</select><label class="nota" style="display:block;margin-top:8px">Talla de abajo</label><select id="de-tb">' + _opt(T_ABA, d.talla_abajo) + '</select>'
+    + '<label class="nota" style="display:block;margin-top:8px">Prefiero recibir</label><select id="de-e"><option value="">—</option>' + Object.keys(ENT).map(k => '<option value="' + k + '"' + (d.entrega === k ? ' selected' : '') + '>' + ENT[k] + '</option>').join('') + '</select>'
+    + '<p class="nota" style="margin-top:12px"><b>Mis direcciones</b></p><div id="de-d">' + (d.direcciones || []).map(_dirForm).join('') + '</div><button class="lnk" onclick="if (document.querySelectorAll(\'#de-d .dir\').length < 5) document.getElementById(\'de-d\').insertAdjacentHTML(\'beforeend\', _dirForm({}))">+ Agregar otra dirección</button>'
+    + '<div class="err" id="de-er"></div><button class="btn" style="margin-top:10px" onclick="datosGuardar(this)">Guardar</button>');
+}
+async function datosGuardar(b){
+  const dirs = Array.from(document.querySelectorAll('#de-d .dir')).map(e => { const o = {}; e.querySelectorAll('input').forEach(i => o[i.dataset.k] = i.value.trim()); return o; }).filter(o => o.direccion);
+  const D = { nombre: $('#de-n').value.trim(), celular: $('#de-c').value.trim(), talla_arriba: $('#de-ta').value, talla_abajo: $('#de-tb').value, entrega: $('#de-e').value, direcciones: dirs };
+  b.disabled = true; $('#de-er').textContent = '';
+  try { const r = await rpc('micuenta_datos_guardar', { p_llave: _llave, p_datos: D });
+    if (r === 'celular') { $('#de-er').textContent = 'Revisa tu celular: 9 dígitos y empieza con 9.'; b.disabled = false; return; }
+    if (r !== 'ok') { $('#de-er').textContent = 'No se pudo guardar. Intenta otra vez.'; b.disabled = false; return; }
+    document.querySelector('.velo').remove(); datosCargar();
+  } catch(_) { $('#de-er').textContent = 'No pudimos conectarnos.'; b.disabled = false; }
+}
+// 28-nov (Pablo aprobó la fase 1) · CAMBIOS_F1_28NOV · como Zara y Loop: 1) qué prenda de tu pedido, 2) por cuál (solo lo que hay en stock en la web),
+// 3) misma prenda en otra talla o color, u otra prenda del mismo precio = solicitud directa; precio distinto = una asesora confirma la diferencia.
+// Queda como solicitud en el ERP (Alertas + ficha de la clienta) y se abre el WhatsApp de la asesora con todo escrito. 1er cambio del 1er pedido: envío gratis.
+let _HT = [], _cb = null, _cat = null;
+async function catalogo(){ if (_cat) return _cat; const r = await fetch(TIENDA + '/products.json?limit=250'); const L = ((await r.json()).products || []).filter(p => !/RESERVA|GIFT|TARJETA/i.test(p.title + ' ' + p.product_type)); _cat = L; return L; }
+const _sinTalla = t => _norm(t).replace(/\s+(XXS|XS|S|M|L|XL|XXL|U|\d{2})$/, '').trim();
+function _prodDe(prenda, L){ const t = _sinTalla(prenda); let m = null, ml = 0; L.forEach(p => { const n = _norm(p.title); if (t.indexOf(n) === 0 && n.length > ml) { m = p; ml = n.length; } }); return m; }
+function cambioAbrir(nro){
+  if (VER) return; const x = _HT.find(h => String(h.nro).replace(/\W/g, '') === String(nro)); if (!x) return;
+  _cb = { x: x, paso: 1, it: null, dest: null, tipo: null }; velo('<div id="cb"></div>'); cbPintar();
+}
+async function cbPintar(){
+  const b = $('#cb'); if (!b) return; const x = _cb.x, I = (x.items && x.items.length ? x.items : String(x.prendas || '').split(/\s*·\s*/).filter(Boolean).map(p => ({ prenda: p, precio: null })));
+  if (_cb.paso === 1) {
+    b.innerHTML = '<h2>Cambio · pedido #' + esc(x.nro) + '</h2><p class="nota">1 de 2 · ¿Qué prenda quieres cambiar?</p><div class="mot">' + I.map((it, i) => '<label><input type="radio" name="cb-i" value="' + i + '"><span>' + esc(it.prenda) + (it.color ? ' · ' + esc(it.color) : '') + (it.precio ? ' · ' + sol(it.precio) : '') + '</span></label>').join('') + '</div>'
+      + '<div class="err" id="cb-e1"></div><button class="btn" style="margin-top:10px" onclick="cbSig1()">Siguiente</button>';
+    _cb.I = I;
+    return;
+  }
+  if (_cb.paso === 2) {
+    b.innerHTML = '<h2>¿Por cuál la cambias?</h2><p class="nota">2 de 2 · Solo te mostramos lo que hay en stock.</p><p class="nota">Cargando…</p>';
+    let L = []; try { L = await catalogo(); } catch(_) {}
+    const p = _prodDe(_cb.it.prenda, L), yo = _norm(_cb.it.prenda);
+    const vs = p ? (p.variants || []).filter(v => v.available && (_norm(p.title) + ' ' + _norm(v.title.replace(' / ', ' '))) !== yo) : [];
+    const chip = (pr, v) => '<button class="chip" style="margin:4px 4px 0 0;border:0;cursor:pointer;font:inherit;font-size:13px;padding:8px 12px" onclick=\'cbElegir(' + JSON.stringify({ t: pr.title + ' ' + v.title.replace(' / ', ' '), pid: pr.id, precio: Number(v.price) }).replace(/'/g, '&#39;') + ')\'>' + esc(v.title.replace(' / ', ' · ')) + '</button>';
+    b.innerHTML = '<h2>¿Por cuál la cambias?</h2><p class="nota">Cambias: <b>' + esc(_cb.it.prenda) + '</b></p>'
+      + (p ? '<p class="nota" style="margin-top:10px"><b>La misma prenda en otra talla o color</b></p><div>' + (vs.length ? vs.map(v => chip(p, v)).join('') : '<span class="nota">No hay otras tallas o colores en stock ahora.</span>') + '</div>' : '')
+      + '<p class="nota" style="margin-top:14px"><b>Otra prenda</b></p><input id="cb-q" placeholder="Busca: blusa, pantalón, Toscana…" oninput="cbBuscar()"><div id="cb-r"></div>'
+      + '<button class="lnk" style="margin-top:10px" onclick="_cb.paso = 1; cbPintar()">‹ Volver</button>';
+    _cb.L = L; _cb.p = p; return;
+  }
+  const t = _cb.tipo, g = '<p class="nota">🚚 Si es tu primer cambio, el envío es <b>gratis</b>. Si no, tu asesora te confirma el costo de envío.</p>';
+  b.innerHTML = '<h2>Revisa tu cambio</h2><div class="sw" style="display:block"><span class="nota">Devuelves</span><br><b>' + esc(_cb.it.prenda) + '</b></div><div class="sw" style="display:block"><span class="nota">Recibes</span><br><b>' + esc(_cb.dest.t) + '</b></div>'
+    + (t === 'diferencia' ? '<p class="nota">💬 Esta prenda tiene otro precio (' + sol(_cb.dest.precio) + '). Una asesora te confirma la diferencia antes de enviarla.</p>' : '<p class="nota">✅ Mismo precio: no pagas diferencia.</p>') + g
+    + '<input id="cb-d" maxlength="200" placeholder="¿Algo más? (opcional)"><div class="err" id="cb-e"></div><button class="btn" onclick="cbEnviar(this)">Solicitar cambio</button><button class="lnk" style="margin-top:10px" onclick="_cb.paso = 2; cbPintar()">‹ Elegir otra</button>';
+}
+function cbSig1(){ const r = document.querySelector('input[name=cb-i]:checked'); if (!r) { $('#cb-e1').textContent = 'Elige la prenda que quieres cambiar.'; return; } _cb.it = _cb.I[Number(r.value)]; _cb.paso = 2; cbPintar(); }
+function cbBuscar(){
+  const q = _norm($('#cb-q').value), r = $('#cb-r'); if (q.length < 3) { r.innerHTML = ''; return; }
+  const out = []; (_cb.L || []).forEach(p => { if (_norm(p.title).indexOf(q) < 0) return; (p.variants || []).filter(v => v.available).forEach(v => out.push([p, v])); });
+  r.innerHTML = out.slice(0, 30).map(([p, v]) => '<button class="chip" style="margin:4px 4px 0 0;border:0;cursor:pointer;font:inherit;font-size:13px;padding:8px 12px;text-align:left" onclick=\'cbElegir(' + JSON.stringify({ t: p.title + ' ' + v.title.replace(' / ', ' '), pid: p.id, precio: Number(v.price) }).replace(/'/g, '&#39;') + ')\'>' + esc(p.title) + ' · ' + esc(v.title.replace(' / ', ' · ')) + ' · ' + sol(v.price) + '</button>').join('') || '<p class="nota">No hay en stock con ese nombre.</p>';
+}
+function cbElegir(d){
+  _cb.dest = d; const mismo = _cb.p && d.pid === _cb.p.id, pr = Number(_cb.it.precio || 0);
+  _cb.tipo = mismo ? 'mismo_diseno' : (pr && Math.abs(d.precio - pr) < 1 ? 'mismo_precio' : 'diferencia'); _cb.paso = 3; cbPintar();
+}
+async function cbEnviar(b){
+  const e = $('#cb-e'); e.textContent = ''; b.disabled = true; const det = String($('#cb-d').value || '').trim();
+  try { const r = await rpc('micuenta_cambio_pedir', { p_llave: _llave, p_nro: String(_cb.x.nro), p_prenda: _cb.it.prenda, p_destino: _cb.dest.t, p_tipo: _cb.tipo, p_detalle: det }) || {};
+    if (r.r === 'vencido') { e.textContent = 'Este pedido ya pasó los ' + D_CAMBIO + ' días para cambio.'; return; }
+    if (r.r === 'ya') { e.textContent = 'Ya pediste el cambio de esta prenda hoy. Tu asesora te escribirá.'; return; }
+    if (r.r !== 'ok') { e.textContent = 'No se pudo enviar. Intenta otra vez.'; b.disabled = false; return; }
+    const txt = 'Hola 😊 Solicité un cambio desde mi app. Pedido #' + _cb.x.nro + ': cambio ' + _cb.it.prenda + ' por ' + _cb.dest.t + (_cb.tipo === 'diferencia' ? ' (tiene otro precio, ¿me confirmas la diferencia?)' : '') + (det ? '. ' + det : '') + '.';
+    $('#cb').innerHTML = '<h2>¡Listo! Pediste tu cambio</h2><p class="nota">' + (r.gratis ? '🎁 Es tu primer cambio: el envío va por nuestra cuenta. ' : '') + 'Envíaselo a tu asesora para coordinar el recojo y el envío.</p><a class="btn wa" style="display:block;text-align:center;text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/' + WA + '?text=' + encodeURIComponent(txt) + '">Enviar a mi asesora</a>';
+  } catch(_) { e.textContent = 'No pudimos conectarnos. Intenta otra vez.'; b.disabled = false; }
 }
 function beneficios(){ velo('<h2>Beneficios Tulula</h2>' + tablaNiveles()); }
 function tablaNiveles(){   // 26-nov (Pablo) · comparativo por nivel en tabla; textos y montos salen del ERP (Configuración › Segmentos): una sola fuente
