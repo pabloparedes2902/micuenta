@@ -202,7 +202,7 @@ function armar(nombre, P, llave){
     + '<nav class="tabs">' + TABS_MC.map((t, i) => '<button data-t="' + t[0] + '"' + (i ? '' : ' class="on"') + ' onclick="tab(\'' + t[0] + '\')">' + t[1] + '</button>').join('') + '</nav>'
     + '<section data-s="ped"><div class="card" id="push-q" style="display:none"><h2>🔔 ¿Te avisamos cuando llegue tu pedido?</h2><p class="nota">Te llega un aviso a este celular en cada paso, sin abrir el correo.</p><button class="btn" onclick="tab(\'cta\')">Activar avisos</button></div><div class="card" id="cor-q" style="display:none"><h2>🎁 Activa tu cuenta y gana 500 puntos canjeables</h2><p class="nota">Equivalen a S/ 10 de descuento en tu próxima compra. Escribe tu correo:</p><input id="cor-e" type="email" inputmode="email" autocomplete="email" placeholder="tucorreo@ejemplo.com" style="width:100%;margin:8px 0"><label class="sw"><span>Quiero recibir lanzamientos y descuentos exclusivos por correo (necesario para los 500 puntos). Me doy de baja cuando quiera.</span><input type="checkbox" id="cor-a"></label><button class="btn" style="margin-top:10px" onclick="correoAgregar(this)">Activar mi cuenta</button><p class="nota" id="cor-er"></p></div><div class="card" id="av-q" style="display:none"><h2>¿Quieres enterarte primero?</h2><p class="nota"><b>🎁 Acepta y gana 500 puntos = S/ 10 de descuento</b> en tu próxima compra. Lanzamientos y descuentos exclusivos para clientas, por correo. Puedes darte de baja cuando quieras.</p><div style="display:flex;gap:8px;margin-top:10px"><button class="btn" onclick="noveSi(this)">Sí, quiero</button><button class="btn sec" onclick="noveNo()">Ahora no</button></div></div>' + (cur.length ? '<div class="card"><h2 class="tgl abierto" onclick="this.classList.toggle(\'abierto\'); this.nextElementSibling.style.display = this.classList.contains(\'abierto\') ? \'\' : \'none\'">' + (cur.length > 1 ? 'Pedidos en curso (' + cur.length + ')' : 'Pedido en curso') + '</h2><div>' + cur.map(tarjeta).join('') + '</div></div>' : '') + '<div class="card" id="hist" style="display:none"><h2 id="hist-t">Pedidos anteriores</h2><div id="hist-l"></div></div>' + vitrinaCaja() + '</section>'
     
-    + '<section data-s="cam" style="display:none"><div class="card"><h2>Cambios</h2><p class="nota">Tienes hasta ' + D_CAMBIO + ' días calendario desde que recibes tu pedido para solicitar un cambio de talla, color o modelo.</p><div id="cam-l"><p class="nota">Cargando tus pedidos…</p></div><a class="btn wa" style="display:block;text-align:center;text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/' + WA + '?text=' + encodeURIComponent('Hola 😊 Quiero hacer un cambio de mi pedido' + (P[0] ? ' #' + P[0].nro : '') + '.') + '">Gestionarlo con una asesora</a></div></section>'
+    + '<section data-s="cam" style="display:none"><div class="card"><h2>Cambios</h2><ol class="nota" style="margin:6px 0 10px 18px;padding:0;line-height:1.8"><li>Elige la prenda de tu pedido que quieres cambiar.</li><li>Elige por cuál: otra talla, otro color u otra prenda en stock.</li><li>Te confirmamos y coordinamos el recojo y el envío.</li></ol><p class="nota">Tienes hasta ' + D_CAMBIO + ' días calendario desde que recibes tu pedido. Tu primer cambio va con envío gratis.</p><div id="cam-m"></div><div id="cam-l"><p class="nota">Cargando tus pedidos…</p></div><a class="btn wa" style="display:block;text-align:center;text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/' + WA + '?text=' + encodeURIComponent('Hola 😊 Quiero hacer un cambio de mi pedido' + (P[0] ? ' #' + P[0].nro : '') + '.') + '">Gestionarlo con una asesora</a></div></section>'
     + '<section data-s="cta" style="display:none">' + perfilCaja() + '<div class="card" id="cumple-box" style="display:none"></div>' + datosCaja() + pushCaja() + avisosCaja() + instalar + '</section>';
   if (VER) { document.body.classList.add('ver'); app.insertAdjacentHTML('afterbegin', '<div class="ver-modo">👁 Estás viendo la cuenta de ' + esc(nombre || 'la clienta') + ' · solo lectura</div>'); } else iosAviso();
   if (evInst && !VER) $('#inst').style.display = 'block'; avisosCargar(llave); pushCargar(); datosCargar();   // PUSH_28NOV · PERFIL_28NOV
@@ -219,7 +219,7 @@ const D_CAMBIO = 15;
 const _diaLima = t => Date.parse(new Date(t).toLocaleDateString('en-CA', { timeZone: 'America/Lima' }));
 const _diasDesde = t => t ? Math.round((_diaLima(Date.now()) - _diaLima(t)) / 864e5) : null;
 function cambiosPintar(H){
-  _HT = H || []; const box = $('#cam-l'); if (!box) return;
+  _HT = H || []; cambiosMios(); const box = $('#cam-l'); if (!box) return;
   const L = (H || []).filter(x => /ENTREGADO/i.test(String(x.estado || ''))).slice(0, 6);
   if (!L.length) { box.innerHTML = '<p class="nota">Aún no tienes pedidos entregados. Cuando recibas tu pedido, aquí podrás solicitar tu cambio.</p>'; return; }
   box.innerHTML = L.map(x => { const d = _diasDesde(x.entregado), ok = d != null && d <= D_CAMBIO, q = D_CAMBIO - (d || 0), n = String(x.nro).replace(/\W/g, '');
@@ -299,12 +299,14 @@ let _pf = null;
 const PTS_SOL = 50, pts = n => Number(n || 0).toLocaleString('es-PE'), ptsSol = n => 'S/ ' + (Number(n || 0) / PTS_SOL).toFixed(2);
 /* VENCE_AVISO_26NOV: desde 30 días antes, aviso naranja en la tarjeta (correos: 15, 7 y 1 día) */
 function _ptsDias(f){ const m = String(f||'').match(/(\d+)\/(\d+)\/(\d+)/); if (!m) return 999; const v = new Date(+m[3], +m[2]-1, +m[1]); const h = new Date(); h.setHours(0,0,0,0); return Math.round((v - h) / 864e5); }
-function perfilCaja(){ return '<div class="card" id="perfil" style="display:none"><h2>Mis puntos y nivel</h2><div id="pf"></div><details style="margin-top:12px"><summary class="nota" style="cursor:pointer">Condiciones del programa de puntos</summary><ol class="nota cond"><li><b>Cómo ganas:</b> 1 punto por cada S/ 1 que pagas en prendas, después de descuentos; el envío no suma. Suman las compras desde el 26/11/2026. Bono de bienvenida: 500 puntos, una sola vez, al activar tu cuenta con tu correo y aceptar novedades.</li><li><b>Cuándo se suman:</b> 7 días después de recibir tu pedido pagado completo. Antes aparecen «por acreditar».</li><li><b>Cuánto valen:</b> 500 puntos = S/ 10 de descuento. Super VIP además: 1 000 puntos = S/ 20 y 2 500 puntos = una prenda de hasta S/ 100.</li><li><b>Cómo canjeas:</b> pídeselo a tu asesora al hacer tu pedido. En prendas a precio de lista (no en ofertas, Yayitas ni envío), en pedidos desde S/ 10 y un canje por pedido. No se combinan con cupones, ofertas ni el descuento de cumpleaños.</li><li><b>Cambios y devoluciones:</b> un cambio de talla o color no resta puntos. Si devuelves una prenda, se restan sus puntos; si la pagaste en parte con puntos, se te devuelve lo que pagaste y los puntos usados no se devuelven.</li><li><b>Vencimiento:</b> vencen si pasan 12 meses sin que compres ni canjees; cada compra o canje los renueva. Te avisamos por correo 15 días, 7 días y 1 día antes.</li><li><b>Generales:</b> los puntos no son dinero: no se cambian por efectivo ni se transfieren. Una cuenta por clienta.</li></ol></details></div>'; }
+const _fLarga = t => { const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(String(t || '')); if (!m) return t; return Number(m[1]) + ' de ' + ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','setiembre','octubre','noviembre','diciembre'][Number(m[2]) - 1] + ' de ' + m[3]; };
+function perfilCaja(){ return '<div class="card" id="perfil" style="display:none"><h2>Mis puntos y nivel</h2><div id="pf"></div><details style="margin-top:12px"><summary class="nota" style="cursor:pointer"><b>Condiciones del programa de puntos</b></summary><ol class="nota cond"><li><b>Cómo ganas:</b> por cada S/ 10 que pagas en prendas, después de descuentos (el envío no suma): Clienta 10 puntos, VIP 15 y Super VIP 20. Suman las compras desde el 26/11/2026. Bono de bienvenida: 500 puntos, una sola vez, al activar tu cuenta con tu correo y aceptar novedades.</li><li><b>Cuándo se suman:</b> 7 días después de recibir tu pedido pagado completo. Antes aparecen «por acreditar».</li><li><b>Cuánto valen:</b> 500 puntos = S/ 10 de descuento. Super VIP además: 1 000 puntos = S/ 20 y 2 500 puntos = una prenda de hasta S/ 100.</li><li><b>Cómo canjeas:</b> pídeselo a tu asesora al hacer tu pedido. En prendas a precio de lista (no en ofertas, Yayitas ni envío), en pedidos desde S/ 10 y un canje por pedido. No se combinan con cupones, ofertas ni el descuento de cumpleaños.</li><li><b>Cambios y devoluciones:</b> un cambio de talla o color no resta puntos. Si devuelves una prenda, se restan sus puntos; si la pagaste en parte con puntos, se te devuelve lo que pagaste y los puntos usados no se devuelven.</li><li><b>Vencimiento:</b> vencen si pasan 12 meses sin que compres ni canjees; cada compra o canje los renueva. Te avisamos por correo 15 días, 7 días y 1 día antes.</li><li><b>Generales:</b> los puntos no son dinero: no se cambian por efectivo ni se transfieren. Una cuenta por clienta.</li></ol></details></div>'; }
 const sol = n => 'S/ ' + Number(n || 0).toLocaleString('es-PE', { maximumFractionDigits: 0 });
 async function perfilCargar(llave){
   try { const r = await rpc('micuenta_perfil_leer', { p_llave: llave }); if (!r) return; _pf = r;
     const MES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','setiembre','octubre','noviembre','diciembre'];
-    let h = '<p style="margin:6px 0"><span class="chip' + (r.nivel === 'Clienta Tulula' ? '' : ' vip') + '">' + esc(r.nivel) + '</span> <button class="lnk" onclick="document.getElementById(\'niv\').scrollIntoView({ behavior: \'smooth\' })">Conoce los beneficios</button></p>';
+    let h = '';   // 28-nov (Pablo) · el nivel va a la derecha del título; sin el botón de beneficios
+    { const t = document.querySelector('#perfil h2'); if (t) t.innerHTML = 'Mis puntos y nivel <span class="chip' + (r.nivel === 'Clienta Tulula' ? '' : ' vip') + '" style="float:right">' + esc(r.nivel) + '</span>'; }
     if (r.siguiente) h += '<p class="nota">' + (Number(r.pendiente) > 0
       ? 'Cuando completes tu pago de ' + sol(r.pendiente) + (Number(r.falta_despues) > 0 ? ', te faltarán ' + sol(r.falta_despues) + ' en compras para ser ' + esc(r.siguiente) + '.' : ', ¡pasas a ' + esc(r.siguiente) + '!')
       : 'Te faltan ' + sol(r.falta) + ' en compras para ser ' + esc(r.siguiente) + '.') + '</p>';
@@ -313,8 +315,8 @@ async function perfilCargar(llave){
     else hc += '<div class="sw" style="display:block"><b>¿Quieres que te regalemos 20% de descuento en tu mes de cumpleaños?</b><button class="btn" style="margin-top:10px" onclick="cumpleAbrir()">Sí, quiero mi regalo</button></div>';
     if (r.correo) hc += '<div class="sw"><span>Correo</span><b>' + esc(r.correo) + '</b></div>';
     const cb = $('#cumple-box'); if (cb) { cb.innerHTML = hc; cb.style.display = 'block'; }
-    h += '<div class="sw" style="display:block"><div style="display:flex;justify-content:space-between"><span>⭐ Mis puntos</span><b>' + pts(r.puntos) + ' <small style="font-weight:500">= ' + ptsSol(r.puntos) + '</small></b></div>'
-      + (Number(r.puntos_en_curso) > 0 ? '<p class="nota">Al completar tu pedido ganarás <b>' + pts(r.puntos_en_curso) + ' puntos (' + ptsSol(r.puntos_en_curso) + ')</b>.</p>' : '') + (Number(r.puntos_por_acreditar) > 0 ? '<p class="nota">⏳ <b>' + pts(r.puntos_por_acreditar) + ' puntos</b> por acreditar: se suman 7 días después de recibir tu pedido.</p>' : '') + (r.puntos_vence ? (_ptsDias(r.puntos_vence) <= 30 && Number(r.puntos) > 0 ? '<p class="nota" style="color:#E8833A;font-weight:600">⏰ Tus puntos vencen ' + (_ptsDias(r.puntos_vence) <= 1 ? 'mañana' : 'en ' + _ptsDias(r.puntos_vence) + ' días') + ' (' + esc(r.puntos_vence) + '). Con cualquier compra duran 12 meses más.</p>' : '<p class="nota">Tus puntos vencen el ' + esc(r.puntos_vence) + ' si antes no compras ni canjeas.</p>') : '') + '<p class="nota">1 punto por cada S/ 1 · 500 puntos = S/ 10 de descuento.</p></div>';
+    h += '<div class="sw" style="display:block"><div style="display:flex;justify-content:space-between"><span>⭐ Mis puntos</span><b>' + pts(r.puntos) + '</b></div>'
+      + (Number(r.puntos_en_curso) > 0 ? '<p class="nota">Al completar tu pedido ganarás <b>' + pts(r.puntos_en_curso) + ' puntos</b>.</p>' : '') + (Number(r.puntos_por_acreditar) > 0 ? '<p class="nota">⏳ <b>' + pts(r.puntos_por_acreditar) + ' puntos</b> por acreditar: se suman 7 días después de recibir tu pedido.</p>' : '') + (r.puntos_vence ? (_ptsDias(r.puntos_vence) <= 30 && Number(r.puntos) > 0 ? '<p class="nota" style="color:#E8833A;font-weight:600">⏰ Tus puntos vencen ' + (_ptsDias(r.puntos_vence) <= 1 ? 'mañana' : 'en ' + _ptsDias(r.puntos_vence) + ' días') + ' (' + esc(r.puntos_vence) + '). Con cualquier compra duran 12 meses más.</p>' : '<p class="nota">Tus puntos vencen el ' + esc(_fLarga(r.puntos_vence)) + ' o se renuevan 12 meses si compras antes.</p>') : '') + '</div>';
     h += '<h2 id="niv" style="margin-top:16px;scroll-margin-top:120px">Niveles y beneficios</h2>' + tablaNiveles();   // 26-nov noche (Pablo) · comparativo a la vista
     $('#pf').innerHTML = h; $('#perfil').style.display = 'block';
   } catch(_) {}
@@ -382,11 +384,13 @@ async function pushCargar(){
     if (_iOS && !_standalone) { n.innerHTML = 'En iPhone, primero instala la app: toca <b>Compartir</b> (⬆ abajo en Safari, arriba a la derecha en Chrome), elige <b>Agregar a inicio</b> y ábrela desde el ícono nuevo. Ahí aparece «Activar avisos».'; return; }
     if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) { n.textContent = 'Este navegador no permite avisos. Abre la app desde Chrome o instálala.'; return; }
     if (Notification.permission === 'denied') { n.textContent = 'Bloqueaste los avisos de Tulula. Actívalos en los ajustes del navegador (candado junto a la dirección › Notificaciones).'; return; }
-    const reg = await navigator.serviceWorker.ready; _psub = await reg.pushManager.getSubscription();
+    n.textContent = 'Revisando este celular…';
+    const reg = (await Promise.race([navigator.serviceWorker.ready, new Promise(z => setTimeout(z, 4000))])) || (await navigator.serviceWorker.register('sw.js'));   // 28-nov · en iPhone «ready» a veces no responde
+    _psub = await reg.pushManager.getSubscription();
     const v = _psub ? await rpc('micuenta_push_ver', { p_llave: _llave, p_endpoint: _psub.endpoint }) : null;
     if (v) { n.textContent = '✅ Activados. ¿Cuándo te avisamos de tu pedido?'; b.innerHTML = _pModos(v.modo) + '<button class="lnk" style="margin-top:6px" onclick="pushQuitar(this)">Desactivar en este celular</button>'; }
     else { n.textContent = 'Recibe un aviso en este celular cuando tu pedido avance. ¿Cuándo te avisamos?'; b.innerHTML = _pModos('cada_paso') + '<button class="btn" onclick="pushActivar(this)">Activar avisos</button>'; const q = $('#push-q'); if (q) q.style.display = 'block'; }
-  } catch(_) {}
+  } catch(er) { _pushLog('cargar', er); const n = $('#push-n'), b = $('#push-b'); if (n && b && !b.innerHTML) { n.textContent = 'Recibe un aviso en este celular cuando tu pedido avance.'; b.innerHTML = '<button class="btn" onclick="pushActivar(this)">Activar avisos</button>'; } }
 }
 function _pushLog(paso, er){ try { rpc('micuenta_push_error', { p_llave: _llave, p_paso: paso, p_msg: String(er && (er.name ? er.name + ': ' + er.message : er) || ''), p_ua: navigator.userAgent + (_standalone ? ' [instalada]' : '') }).catch(() => {}); } catch(_) {} }   // 28-nov · si falla, la base guarda por qué
 async function pushActivar(btn){
@@ -394,7 +398,7 @@ async function pushActivar(btn){
   try {
     const perm = await Notification.requestPermission();
     if (perm !== 'granted') { _pushLog('permiso', perm); e.textContent = 'Para recibir avisos, toca «Permitir» cuando el celular lo pregunte.'; btn.disabled = false; return; }
-    const reg = await navigator.serviceWorker.ready;
+    const reg = (await Promise.race([navigator.serviceWorker.ready, new Promise(z => setTimeout(z, 4000))])) || (await navigator.serviceWorker.register('sw.js'));
     _psub = (await reg.pushManager.getSubscription()) || await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: _b64u(_pk.publica) });
     const m = (document.querySelector('input[name="push-m"]:checked') || {}).value || 'cada_paso';
     const r = await rpc('micuenta_push_guardar', { p_llave: _llave, p_sub: _psub.toJSON(), p_modo: m, p_prueba: LS.g('mc_push_prueba') === '1' });
@@ -422,7 +426,7 @@ function datosPintar(){
   const d = _dt, D = d.direcciones || [];
   $('#dt-v').innerHTML = _dfila('Nombre', d.nombre) + _dfila('Celular', d.celular) + _dfila('Talla de arriba', d.talla_arriba) + _dfila('Talla de abajo', d.talla_abajo) + _dfila('Prefiero recibir', ENT[d.entrega])
     + '<p class="nota" style="margin-top:12px"><b>Mis direcciones</b></p>' + (D.length ? D.map((x, i) => '<div class="sw" style="display:block"><b>' + esc(x.alias || 'Dirección ' + (i + 1)) + '</b><br><span class="nota">' + esc([x.direccion, x.distrito, x.provincia, x.region].filter(Boolean).join(', ')) + (x.referencia ? ' · Ref.: ' + esc(x.referencia) : '') + '</span></div>').join('') : '<p class="nota">Aún no tienes direcciones.</p>')
-    + (d.guardado || VER ? '' : '<p class="nota">Lo tomamos de tu último pedido. Revísalo y guárdalo.</p>') + (VER ? '' : '<button class="btn sec" style="margin-top:8px" onclick="datosEditar()">Editar mis datos</button>');
+    + (VER ? '' : '<button class="btn sec" style="margin-top:8px" onclick="datosEditar()">Editar mis datos</button>');
 }
 const _opt = (L, v) => '<option value="">—</option>' + L.map(x => '<option' + (String(v || '') === x ? ' selected' : '') + '>' + x + '</option>').join('');
 const _dirForm = (x, i) => '<div class="dir" style="border-top:1px solid var(--gr);padding-top:8px;margin-top:8px"><input data-k="alias" placeholder="Nombre (Casa, Oficina…)" value="' + esc(x.alias || '') + '"><input data-k="direccion" placeholder="Dirección" value="' + esc(x.direccion || '') + '"><input data-k="referencia" placeholder="Referencia" value="' + esc(x.referencia || '') + '"><input data-k="distrito" placeholder="Distrito" value="' + esc(x.distrito || '') + '"><input data-k="provincia" placeholder="Provincia" value="' + esc(x.provincia || '') + '"><input data-k="region" placeholder="Región" value="' + esc(x.region || '') + '"><button class="lnk" onclick="this.parentElement.remove()">Quitar esta dirección</button></div>';
@@ -480,6 +484,13 @@ async function cbPintar(){
     + (t === 'diferencia' ? '<p class="nota">💬 Esta prenda tiene otro precio (' + sol(_cb.dest.precio) + '). Una asesora te confirma la diferencia antes de enviarla.</p>' : '<p class="nota">✅ Mismo precio: no pagas diferencia.</p>') + g
     + '<input id="cb-d" maxlength="200" placeholder="¿Algo más? (opcional)"><div class="err" id="cb-e"></div><button class="btn" onclick="cbEnviar(this)">Solicitar cambio</button><button class="lnk" style="margin-top:10px" onclick="_cb.paso = 2; cbPintar()">‹ Elegir otra</button>';
 }
+async function cambiosMios(){   // 28-nov · sus solicitudes y en qué van
+  const b = $('#cam-m'); if (!b || !_llave) return;
+  try { const L = (await rpc('micuenta_cambio_mias', { p_llave: _llave })) || []; if (!L.length) { b.innerHTML = ''; return; }
+    const E = { NUEVA: 'Recibida', ATENDIDA: 'En proceso', HECHA: 'Hecha' };
+    b.innerHTML = '<p class="nota" style="margin-top:6px"><b>Mis solicitudes</b></p>' + L.map(x => '<div class="sw" style="display:block"><div style="display:flex;justify-content:space-between;gap:8px"><b>Pedido #' + esc(x.nro) + '</b><span class="chip">' + esc(E[x.estado] || x.estado || 'Recibida') + '</span></div><span class="nota">' + esc(x.prenda) + (x.destino ? ' → ' + esc(x.destino) : '') + ' · ' + esc(fdia(x.ts)) + '</span></div>').join('');
+  } catch(_) {}
+}
 function cbSig1(){ const r = document.querySelector('input[name=cb-i]:checked'); if (!r) { $('#cb-e1').textContent = 'Elige la prenda que quieres cambiar.'; return; } _cb.it = _cb.I[Number(r.value)]; _cb.paso = 2; cbPintar(); }
 function cbBuscar(){
   const q = _norm($('#cb-q').value), r = $('#cb-r'); if (q.length < 3) { r.innerHTML = ''; return; }
@@ -497,6 +508,7 @@ async function cbEnviar(b){
     if (r.r === 'ya') { e.textContent = 'Ya pediste el cambio de esta prenda hoy. Tu asesora te escribirá.'; return; }
     if (r.r !== 'ok') { e.textContent = 'No se pudo enviar. Intenta otra vez.'; b.disabled = false; return; }
     const txt = 'Hola 😊 Solicité un cambio desde mi app. Pedido #' + _cb.x.nro + ': cambio ' + _cb.it.prenda + ' por ' + _cb.dest.t + (_cb.tipo === 'diferencia' ? ' (tiene otro precio, ¿me confirmas la diferencia?)' : '') + (det ? '. ' + det : '') + '.';
+    cambiosMios();
     $('#cb').innerHTML = '<h2>¡Listo! Pediste tu cambio</h2><p class="nota">' + (r.gratis ? '🎁 Es tu primer cambio: el envío va por nuestra cuenta. ' : '') + 'Envíaselo a tu asesora para coordinar el recojo y el envío.</p><a class="btn wa" style="display:block;text-align:center;text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/' + WA + '?text=' + encodeURIComponent(txt) + '">Enviar a mi asesora</a>';
   } catch(_) { e.textContent = 'No pudimos conectarnos. Intenta otra vez.'; b.disabled = false; }
 }
@@ -513,7 +525,7 @@ function tablaNiveles(){   // 26-nov (Pablo) · comparativo por nivel en tabla; 
   const NIV = [['NUEVA', 'Nueva'], ['CLIENTA', 'Clienta'], ['VIP', 'VIP'], ['SUPER VIP', 'Super VIP']];
   const FIL = [
     ['Cómo llegas', k => ({ 'NUEVA': 'Te registras', 'CLIENTA': 'Tu 1.ª compra', 'VIP': sol(r.vip) + ' en 12 meses', 'SUPER VIP': sol(r.svip) + ' en 12 meses' })[k]],
-    ['Puntos por S/ 1', k => { const x = lista(k).map(t => /([\d,\.]+)\s*puntos?\s+por cada/i.exec(t)).find(Boolean); return x ? x[1] : '—'; }],
+    ['Puntos por cada S/ 10', k => ({ 'NUEVA': '10', 'CLIENTA': '10', 'VIP': '15', 'SUPER VIP': '20' })[k]],   // 28-nov (Pablo) · Clienta ×1 · VIP ×1,5 · Super VIP ×2
     ['Envío gratis', k => { const x = lista(k).map(t => /env[ií]o gratis\s+(.+)/i.exec(t)).find(Boolean); return x ? x[1] : '—'; }],
     ['Cumpleaños', k => { const x = lista(k).map(t => /(\d+\s*%).*cumplea/i.exec(t)).find(Boolean); return x ? x[1].replace(/\s/g, '') + ' en un pedido' : '—'; }],
     ['Visita al showroom', k => lista(k).some(t => /showroom/i.test(t)) ? '✓' : '—'],
@@ -521,8 +533,7 @@ function tablaNiveles(){   // 26-nov (Pablo) · comparativo por nivel en tabla; 
     ['Asesora personal', k => lista(k).some(t => /asesora/i.test(t)) ? '✓' : '—'],
     ['Regalo al año', k => lista(k).some(t => /regalo/i.test(t)) ? '✓' : '—']];
   const yo = /super/i.test(r.nivel || '') ? 'SUPER VIP' : /vip/i.test(r.nivel || '') ? 'VIP' : (Number(r.pedidos || 1) > 0 ? 'CLIENTA' : 'NUEVA');
-  return ('<p class="nota">El nivel se calcula con tus compras de los últimos 12 meses. Si un año compras menos, lo mantienes un año más.</p>'
-    + '<div style="overflow-x:auto"><table class="bt"><thead><tr><th></th>' + NIV.map(n => '<th' + (n[0] === yo ? ' class="yo"' : '') + '>' + n[1] + (n[0] === yo ? '<br>(tú)' : '') + '</th>').join('') + '</tr></thead><tbody>'
+  return ('<div style="overflow-x:auto"><table class="bt"><thead><tr><th></th>' + NIV.map(n => '<th' + (n[0] === yo ? ' class="yo"' : '') + '>' + n[1] + (n[0] === yo ? '<br>(tú)' : '') + '</th>').join('') + '</tr></thead><tbody>'
     + FIL.map(f => '<tr><td>' + f[0] + '</td>' + NIV.map(n => '<td' + (n[0] === yo ? ' class="yo"' : '') + '>' + esc(f[1](n[0]) || '—') + '</td>').join('') + '</tr>').join('')
     + '</tbody></table></div><p class="nota" style="margin-top:8px">500 puntos = S/ 10 de descuento. Super VIP además: 1 000 puntos = S/ 20 y 2 500 puntos = una prenda de hasta S/ 100.</p>');
 }
@@ -549,7 +560,7 @@ async function avisosCargar(llave){
   _llave = llave;
   try { const r = await rpc('micuenta_pref_leer', { p_llave: llave }); if (r && r.sin_correo) { const c = $('#cor-q'); if (c) { c.style.display = 'block'; vibrar(); } return; } if (!r) return;
     $('#av-t').textContent = r.elegido ? 'Mis avisos' : '¿Qué quieres que te avisemos?';
-    $('#av-n').textContent = 'Por correo a ' + r.correo + '. Puedes cambiarlo cuando quieras.';
+    $('#av-n').textContent = '';
     r.prefs.novedades = NOVE.every(k => r.prefs[k]);
     $('#av-l').innerHTML = AVISOS.map(([k, t]) => '<label class="sw"><span>' + esc(t) + '</span><input type="checkbox" data-k="' + k + '"' + (r.prefs[k] ? ' checked' : '') + ' onchange="avisoCambiar(this)"></label>').join('');
     $('#avisos').style.display = 'block';
